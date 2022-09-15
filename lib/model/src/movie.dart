@@ -87,3 +87,58 @@ class Movie {
 
   factory Movie.fromJson(Map<String, dynamic> json) => _$MovieFromJson(json);
 }
+
+@JsonSerializable(fieldRename: FieldRename.snake)
+class DetailMovie {
+  DetailMovie({
+    required this.id,
+    required this.title,
+    this.adult = false,
+    this.backdropPath = '',
+    this.genres = const [],
+    this.homepage,
+    this.overview = '',
+    this.releaseDate = '',
+    this.voteAverage = 0.0,
+    this.voteCount = 0,
+    this.status = '',
+  });
+
+  final int id;
+
+  final String title;
+
+  final bool adult;
+
+  final String backdropPath;
+
+  final List<Genre> genres;
+
+  final String? homepage;
+
+  final String overview;
+
+  final String releaseDate;
+
+  final double voteAverage;
+
+  final int voteCount;
+
+  final String status;
+
+  factory DetailMovie.fromJson(Map<String, dynamic> json) => _$DetailMovieFromJson(json);
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake)
+class Genre {
+  Genre({
+    required this.id,
+    required this.name,
+  });
+
+  final int id;
+
+  final String name;
+
+  factory Genre.fromJson(Map<String, dynamic> json) => _$GenreFromJson(json);
+}

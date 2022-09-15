@@ -27,8 +27,9 @@ class ApiProviderImpl implements ApiProvider {
       throw Exception('apiKey를 발급받아주세요.');
     }
 
-    parameters?['language'] = _language;
-    parameters?['api_key'] = _apiKey;
+    parameters ??= <String, String>{};
+    parameters['language'] = _language;
+    parameters['api_key'] = _apiKey;
 
     var uri = Uri.https(_host, '/$_apiVersion/$path', parameters);
     var response = await http.get(uri);

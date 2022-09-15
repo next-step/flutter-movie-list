@@ -72,3 +72,45 @@ Map<String, dynamic> _$MovieToJson(Movie instance) => <String, dynamic>{
       'vote_average': instance.voteAverage,
       'vote_count': instance.voteCount,
     };
+
+DetailMovie _$DetailMovieFromJson(Map<String, dynamic> json) => DetailMovie(
+      id: json['id'] as int,
+      title: json['title'] as String,
+      adult: json['adult'] as bool? ?? false,
+      backdropPath: json['backdrop_path'] as String? ?? '',
+      genres: (json['genres'] as List<dynamic>?)
+              ?.map((e) => Genre.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      homepage: json['homepage'] as String?,
+      overview: json['overview'] as String? ?? '',
+      releaseDate: json['release_date'] as String? ?? '',
+      voteAverage: (json['vote_average'] as num?)?.toDouble() ?? 0.0,
+      voteCount: json['vote_count'] as int? ?? 0,
+      status: json['status'] as String? ?? '',
+    );
+
+Map<String, dynamic> _$DetailMovieToJson(DetailMovie instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'title': instance.title,
+      'adult': instance.adult,
+      'backdrop_path': instance.backdropPath,
+      'genres': instance.genres,
+      'homepage': instance.homepage,
+      'overview': instance.overview,
+      'release_date': instance.releaseDate,
+      'vote_average': instance.voteAverage,
+      'vote_count': instance.voteCount,
+      'status': instance.status,
+    };
+
+Genre _$GenreFromJson(Map<String, dynamic> json) => Genre(
+      id: json['id'] as int,
+      name: json['name'] as String,
+    );
+
+Map<String, dynamic> _$GenreToJson(Genre instance) => <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+    };
