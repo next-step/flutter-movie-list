@@ -91,3 +91,14 @@ class UpcomingMovieCubit extends MovieCubit {
     emit(LoadedState<MovieList>(data: movieList));
   }
 }
+
+class DetailMovieCubit extends Cubit<DataLoadingState> {
+  DetailMovieCubit({required this.repository}) : super(LoadingState());
+
+  final MovieRepository repository;
+
+  void load({required int movieId}) async {
+    final movie = await repository.getDetail(movieId: movieId);
+    emit(LoadedState<DetailMovie>(data: movie));
+  }
+}

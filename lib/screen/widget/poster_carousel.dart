@@ -123,32 +123,40 @@ class _PosterTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 150,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12.0),
-            child: Image.network(
-              'https://image.tmdb.org/t/p/w500/${movie.posterPath}',
-              fit: BoxFit.fitHeight,
-              height: 230,
+    return GestureDetector(
+      onTap: () => Navigator.of(context).pushNamed(
+        '/movie/detail',
+        arguments: ScreenArguments(
+          movieId: movie.id,
+        ),
+      ),
+      child: Container(
+        width: 150,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12.0),
+              child: Image.network(
+                'https://image.tmdb.org/t/p/w500/${movie.posterPath}',
+                fit: BoxFit.fitHeight,
+                height: 230,
+              ),
             ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Text(
-            movie.title,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              overflow: TextOverflow.ellipsis,
+            SizedBox(
+              height: 10,
             ),
-          ),
-        ],
+            Text(
+              movie.title,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

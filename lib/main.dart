@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_movie_list/api/api_provider.dart';
 import 'package:flutter_movie_list/repository/repository.dart';
 import 'package:flutter_movie_list/screen/home.dart';
+import 'package:flutter_movie_list/screen/movie_detail.dart';
+import 'package:flutter_movie_list/screen/screen_arguments.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,6 +27,19 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: MyHomePageWrapper(),
+        onGenerateRoute: (settings) {
+          Widget? screen;
+          if (settings.name == '/movie/detail') {
+            final ScreenArguments? args = settings.arguments as ScreenArguments?;
+            if (args?.movieId != null) {
+              screen = MovieDetailScreen(movieId: args!.movieId!);
+            }
+          }
+
+          if (screen == null) throw UnimplementedError('존재하지 않는 path 입니다.');
+
+          return MaterialPageRoute(builder: (context) => screen!);
+        },
       ),
     );
   }

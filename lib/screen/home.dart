@@ -4,6 +4,7 @@ import 'package:flutter_movie_list/bloc/data_loading.dart';
 import 'package:flutter_movie_list/bloc/main_bloc.dart';
 import 'package:flutter_movie_list/model/model.dart';
 import 'package:flutter_movie_list/repository/repository.dart';
+import 'package:flutter_movie_list/screen/screen_arguments.dart';
 
 part 'widget/cover_carousel.dart';
 part 'widget/poster_carousel.dart';
