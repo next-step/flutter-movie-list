@@ -77,15 +77,6 @@ class _CarouselIndicator extends StatefulWidget {
 
 class _CarouselIndicatorState extends State<_CarouselIndicator> {
   @override
-  void didUpdateWidget(covariant _CarouselIndicator oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (oldWidget.currentIndex != widget.currentIndex) {
-      setState(() {});
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Wrap(
       spacing: 3,
