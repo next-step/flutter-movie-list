@@ -5,13 +5,13 @@ import 'package:flutter_movie_list/model/model.dart';
 
 class SearchRepository {
   SearchRepository({
-    required this.provider,
-  });
+    required ApiProvider apiProvider,
+  }) : _apiProvider = apiProvider;
 
-  final ApiProvider provider;
+  final ApiProvider _apiProvider;
 
   Future<MovieList> search({required String query}) async {
-    final response = await provider.get(path: 'search/movie', parameters: {'query': query});
+    final response = await _apiProvider.get(path: 'search/movie', parameters: {'query': query});
 
     return MovieList.fromJson(jsonDecode(response));
   }

@@ -18,8 +18,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
-    return RepositoryProvider<MovieRepository>(
-      create: (context) => MovieRepository(apiProvider: ApiProviderImpl()),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<MovieRepository>(
+          create: (context) => MovieRepository(
+            apiProvider: ApiProviderImpl(),
+          ),
+        ),
+        RepositoryProvider<SearchRepository>(
+          create: (context) => SearchRepository(
+            apiProvider: ApiProviderImpl(),
+          ),
+        ),
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(

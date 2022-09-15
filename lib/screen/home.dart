@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_movie_list/api/api_provider.dart';
 import 'package:flutter_movie_list/bloc/data_loading.dart';
 import 'package:flutter_movie_list/bloc/main_bloc.dart';
+import 'package:flutter_movie_list/bloc/search_bloc.dart';
 import 'package:flutter_movie_list/model/model.dart';
 import 'package:flutter_movie_list/repository/repository.dart';
 import 'package:flutter_movie_list/screen/screen_arguments.dart';
 
 part 'widget/cover_carousel.dart';
 part 'widget/poster_carousel.dart';
+
+part 'search.dart';
 
 enum Section {
   nowPlaying,
@@ -52,6 +55,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late MainCubit _cubit;
+  int _currentIndex = 0;
 
   @override
   void didChangeDependencies() {
@@ -70,9 +74,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: DataLoadingBuilder<MainCubit, DataLoadingState>(
+    List<Widget> tabViews = [
+      DataLoadingBuilder<MainCubit, DataLoadingState>(
         bloc: _cubit,
         builder: (context, state) {
           return MediaQuery.removePadding(
@@ -121,36 +124,60 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         },
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.black,
-        child: IconTheme(
-          data: IconThemeData(color: Colors.white),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.home,
-                ),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(
-                  Icons.favorite_outline,
-                ),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(Icons.person_outline),
-                onPressed: () {},
-              ),
-            ],
-          ),
+      Center(
+        child: Text(
+          'Interest',
+          style: TextStyle(color: Colors.orange),
         ),
+      ),
+      _SearchView(),
+      Center(
+        child: Text(
+          'My',
+          style: TextStyle(color: Colors.orange),
+        ),
+      ),
+    ];
+
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: tabViews.elementAt(_currentIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _currentIndex,
+        onTap: (index) => setState(() {
+          _currentIndex = index;
+        }),
+        backgroundColor: Colors.black,
+        iconSize: 26,
+        selectedItemColor: Colors.orange,
+        unselectedItemColor: Colors.white,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home,
+            ),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.favorite,
+            ),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.search,
+            ),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.person,
+            ),
+            label: '',
+          ),
+        ],
       ),
     );
   }
