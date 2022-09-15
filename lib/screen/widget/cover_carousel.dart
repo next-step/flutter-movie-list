@@ -8,55 +8,48 @@ class _CoverCarouselWidget extends StatefulWidget {
 }
 
 class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
-  final MovieRepository _repository = MovieRepository(apiProvider: ApiProviderImpl());
-  List<Movie> _movies = [];
   int _currentIndex = 0;
 
   @override
-  void initState() {
-    super.initState();
-
-    _loadMovies();
-  }
-
-  void _loadMovies() async {
-    final movies = await _repository.getNotPlaying();
-
-    setState(() {
-      _movies = movies.results;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 340,
-      child: Stack(
-        children: [
-          PageView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: _movies.length,
-            itemBuilder: (context, index) {
-              return _CarouselTile(
-                movie: _movies[index],
-              );
-            },
-            onPageChanged: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-          ),
-          Positioned(
-            left: 20,
-            bottom: 5,
-            child: _CarouselIndicator(
-              totalCount: _movies.length,
-              currentIndex: _currentIndex,
+    return BlocBuilder<NowPlayingMovieCubit, DataLoadingState>(
+      builder: (context, state) {
+        if (state is LoadedState<MovieList>) {
+          final movies = state.data.results;
+
+          return SizedBox(
+            height: 340,
+            child: Stack(
+              children: [
+                PageView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: movies.length,
+                  itemBuilder: (context, index) {
+                    return _CarouselTile(
+                      movie: movies[index],
+                    );
+                  },
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentIndex = index;
+                    });
+                  },
+                ),
+                Positioned(
+                  left: 20,
+                  bottom: 5,
+                  child: _CarouselIndicator(
+                    totalCount: movies.length,
+                    currentIndex: _currentIndex,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
+          );
+        }
+
+        return SizedBox.shrink();
+      },
     );
   }
 }
