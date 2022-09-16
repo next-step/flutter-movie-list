@@ -15,8 +15,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<FetchMovies>(_onFetchMovies);
   }
 
-  void _onFetchMovies(FetchMovies event, Emitter<HomeState> emit) {
-    emit(Loaded(nowPlaying: MovieList(), popular: MovieList(), upcoming: MovieList()));
+  void _onFetchMovies(FetchMovies event, Emitter<HomeState> emit) async {
+    final nowPlaying = _repository.getNotPlaying();
+    final popular = _repository.getPopular();
+    final upcoming = _repository.getUpcoming();
+
+    emit(Loaded(
+      nowPlaying: await nowPlaying,
+      popular: await popular,
+      upcoming: await upcoming,
+    ));
   }
 
   final MovieRepository _repository;
