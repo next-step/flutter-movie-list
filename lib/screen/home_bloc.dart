@@ -12,7 +12,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc({required MovieRepository repository})
       : _repository = repository,
         super(Loading()) {
-    on<FetchMovies>((event, emit) {});
+    on<FetchMovies>(_onFetchMovies);
+  }
+
+  void _onFetchMovies(FetchMovies event, Emitter<HomeState> emit) {
+    debugPrint('HomeBloc : event : $event');
   }
 
   final MovieRepository _repository;

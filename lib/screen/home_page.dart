@@ -25,12 +25,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
-    final bloc = context.read<HomeBloc>();
-    final repository = context.read<MovieRepository>();
-
-    debugPrint('[SETH] ***** bloc : $bloc');
-    debugPrint('[SETH] ***** repository : $repository');
-
+    context.read<HomeBloc>().add(FetchMovies());
     super.initState();
   }
 
