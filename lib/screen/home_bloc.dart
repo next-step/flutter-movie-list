@@ -16,7 +16,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   void _onFetchMovies(FetchMovies event, Emitter<HomeState> emit) {
-    debugPrint('HomeBloc : event : $event');
+    emit(Loaded(nowPlaying: MovieList(), popular: MovieList(), upcoming: MovieList()));
   }
 
   final MovieRepository _repository;

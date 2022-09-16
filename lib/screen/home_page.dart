@@ -78,35 +78,31 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildBody(BuildContext context, HomeState state) {
-    final stateType = state.runtimeType;
-    switch (stateType) {
-      case Loading:
-        return _buildLoading(context);
-      case Loaded:
-        return _buildLoaded(context);
-      default:
-        return const SizedBox();
+    if (state is Loading) {
+      return _buildLoading(context);
     }
+
+    if (state is Loaded) {
+      return _buildLoaded(context, state);
+    }
+
+    return const SizedBox();
   }
 
   Widget _buildLoading(BuildContext context) {
     return const Center(child: CircularProgressIndicator());
   }
 
-  Widget _buildLoaded(BuildContext context) {
+  Widget _buildLoaded(BuildContext context, Loaded state) {
     return ListView.separated(
       itemBuilder: (BuildContext context, int index) {
         switch (Section.values[index]) {
           case Section.nowPlaying:
-            return const _CoverCarouselWidget();
+            return _CoverCarouselWidget(movies: state.nowPlaying);
           case Section.popular:
-            return const _PosterCarouselWidget(
-              type: PosterType.popular,
-            );
+            return _PosterCarouselWidget(type: PosterType.popular, movies: state.popular);
           case Section.upcoming:
-            return const _PosterCarouselWidget(
-              type: PosterType.upcoming,
-            );
+            return _PosterCarouselWidget(type: PosterType.upcoming, movies: state.upcoming);
           default:
             throw UnimplementedError();
         }

@@ -21,10 +21,12 @@ extension on PosterType {
 class _PosterCarouselWidget extends StatefulWidget {
   const _PosterCarouselWidget({
     required this.type,
+    required this.movies,
     Key? key,
   }) : super(key: key);
 
   final PosterType type;
+  final MovieList movies;
 
   @override
   State<_PosterCarouselWidget> createState() => _PosterCarouselWidgetState();
@@ -44,19 +46,8 @@ class _PosterCarouselWidgetState extends State<_PosterCarouselWidget> {
   void _loadMovies() async {
     late List<Movie> movies;
 
-    if (widget.type == PosterType.popular) {
-      final result = await _repository.getPopular();
-      movies = result.results;
-    } else if (widget.type == PosterType.upcoming) {
-      final result = await _repository.getUpcoming();
-      movies = result.results;
-    } else {
-      //do nothing
-      movies = [];
-    }
-
     setState(() {
-      _movies = movies;
+      _movies = widget.movies.results;
     });
   }
 

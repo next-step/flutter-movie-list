@@ -10,12 +10,12 @@ class Loading extends HomeState {}
 
 class Loaded extends HomeState {
   Loaded({
-    required this.notPlaying,
+    required this.nowPlaying,
     required this.popular,
     required this.upcoming,
   });
 
-  final MovieList notPlaying;
+  final MovieList nowPlaying;
   final MovieList popular;
   final MovieList upcoming;
 }

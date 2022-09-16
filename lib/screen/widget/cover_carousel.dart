@@ -1,7 +1,9 @@
 part of '../home_page.dart';
 
 class _CoverCarouselWidget extends StatefulWidget {
-  const _CoverCarouselWidget({Key? key}) : super(key: key);
+  const _CoverCarouselWidget({required this.movies, Key? key}) : super(key: key);
+
+  final MovieList movies;
 
   @override
   State<_CoverCarouselWidget> createState() => _CoverCarouselWidgetState();
@@ -20,10 +22,10 @@ class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
   }
 
   void _loadMovies() async {
-    final movies = await _repository.getNotPlaying();
+    // final movies = await _repository.getNotPlaying();
 
     setState(() {
-      _movies = movies.results;
+      _movies = widget.movies.results;
     });
   }
 
