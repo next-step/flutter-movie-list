@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_movie_list/exception/fetch_movies_fail_exception.dart';
 import 'package:flutter_movie_list/model/model.dart';
 import 'package:flutter_movie_list/repository/repository.dart';
 
@@ -15,17 +16,31 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<FetchMovies>(_onFetchMovies);
   }
 
-  void _onFetchMovies(FetchMovies event, Emitter<HomeState> emit) async {
-    final nowPlaying = _repository.getNotPlaying();
-    final popular = _repository.getPopular();
-    final upcoming = _repository.getUpcoming();
+  final MovieRepository _repository;
+  int _errorCount = 0;
 
-    emit(Loaded(
-      nowPlaying: await nowPlaying,
-      popular: await popular,
-      upcoming: await upcoming,
-    ));
+  void _onFetchMovies(FetchMovies event, Emitter<HomeState> emit) async {
+    try {
+      final nowPlaying = _repository.getNotPlaying().onError(_onErrorHandle);
+      final popular = _repository.getPopular().onError(_onErrorHandle);
+      final upcoming = _repository.getUpcoming().onError(_onErrorHandle);
+
+      emit(Loaded(
+        nowPlaying: await nowPlaying,
+        popular: await popular,
+        upcoming: await upcoming,
+      ));
+    } catch(e) {
+      emit(Error());
+    }
   }
 
-  final MovieRepository _repository;
+  MovieList _onErrorHandle(Object? error, StackTrace stackTrace) {
+    _errorCount++;
+    if (_errorCount >= 2) {
+      throw FetchMoviesFailException();
+    }
+
+    return MovieList();
+  }
 }

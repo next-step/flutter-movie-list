@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
       return _buildLoaded(context, state);
     }
 
-    return const SizedBox();
+    return _buildError(context);
   }
 
   Widget _buildLoading(BuildContext context) {
@@ -111,6 +111,16 @@ class _HomePageState extends State<HomePage> {
       separatorBuilder: (BuildContext context, int index) {
         return const Divider();
       },
+    );
+  }
+
+  Widget _buildError(BuildContext context) {
+    return const Center(
+      child: Image(
+        image: NetworkImage(
+          'https://i0.wp.com/learn.onemonth.com/wp-content/uploads/2017/08/1-10.png?w=845&ssl=1'
+        ),
+      ),
     );
   }
 }

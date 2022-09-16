@@ -1,0 +1,1 @@
+class FetchMoviesFailException implements Exception {}
