@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_movie_list/screen/home_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_movie_list/api/api_provider.dart';
+import 'package:flutter_movie_list/repository/repository.dart';
 import 'package:flutter_movie_list/screen/home_screen.dart';
 
 void main() {
@@ -20,7 +22,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const HomeScreen(),
+      home: RepositoryProvider(
+        create: (context) => MovieRepository(apiProvider: ApiProviderImpl()),
+        child: const HomeScreen(),
+      ),
     );
   }
 }

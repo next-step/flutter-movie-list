@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_movie_list/api/api_provider.dart';
 import 'package:flutter_movie_list/model/model.dart';
 import 'package:flutter_movie_list/repository/repository.dart';
+import 'package:flutter_movie_list/screen/home_bloc.dart';
 
 part 'widget/cover_carousel.dart';
 part 'widget/poster_carousel.dart';
@@ -20,6 +22,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  @override
+  void initState() {
+    final bloc = context.read<HomeBloc>();
+    final repository = context.read<MovieRepository>();
+
+    debugPrint('[SETH] ***** bloc : $bloc');
+    debugPrint('[SETH] ***** repository : $repository');
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
