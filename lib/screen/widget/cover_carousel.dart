@@ -1,4 +1,4 @@
-part of '../home.dart';
+part of '../home_page.dart';
 
 class _CoverCarouselWidget extends StatefulWidget {
   const _CoverCarouselWidget({Key? key}) : super(key: key);
