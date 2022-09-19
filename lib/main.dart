@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_movie_list/api/api_provider.dart';
 import 'package:flutter_movie_list/repository/repository.dart';
-import 'package:flutter_movie_list/screen/home_screen.dart';
+import 'package:flutter_movie_list/screen/home/home_screen.dart';
 
 void main() {
   runApp(const MyApp());

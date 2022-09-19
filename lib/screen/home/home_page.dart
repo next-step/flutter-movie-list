@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_movie_list/api/api_provider.dart';
 import 'package:flutter_movie_list/model/model.dart';
 import 'package:flutter_movie_list/repository/repository.dart';
-import 'package:flutter_movie_list/screen/home_bloc.dart';
+import 'package:flutter_movie_list/screen/home/home_bloc.dart';
 
 part 'widget/cover_carousel.dart';
 
