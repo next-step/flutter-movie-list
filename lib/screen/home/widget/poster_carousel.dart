@@ -22,11 +22,13 @@ class _PosterCarouselWidget extends StatefulWidget {
   const _PosterCarouselWidget({
     required this.type,
     required this.movies,
+    required this.onTap,
     Key? key,
   }) : super(key: key);
 
   final PosterType type;
   final MovieList movies;
+  final Function(int) onTap;
 
   @override
   State<_PosterCarouselWidget> createState() => _PosterCarouselWidgetState();
@@ -81,15 +83,11 @@ class _PosterCarouselWidgetState extends State<_PosterCarouselWidget> {
               if (index == 0) {
                 return Padding(
                   padding: const EdgeInsets.only(left: 20.0),
-                  child: _PosterTile(
-                    movie: _movies[index],
-                  ),
+                  child: buildPosterTile(index),
                 );
               }
 
-              return _PosterTile(
-                movie: _movies[index],
-              );
+              return buildPosterTile(index);
             },
             separatorBuilder: (context, index) {
               return SizedBox(
@@ -99,6 +97,15 @@ class _PosterCarouselWidgetState extends State<_PosterCarouselWidget> {
           ),
         ),
       ],
+    );
+  }
+
+  GestureDetector buildPosterTile(int index) {
+    return GestureDetector(
+      onTap: () => widget.onTap(_movies[index].id),
+      child: _PosterTile(
+        movie: _movies[index],
+      ),
     );
   }
 }
