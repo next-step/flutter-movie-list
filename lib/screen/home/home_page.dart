@@ -117,7 +117,7 @@ class _HomePageState extends State<HomePage> {
 
   void moveDetailById(int id) {
     debugPrint('moveDetailById : $id');
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const DetailScreen()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailScreen(id: id)));
   }
 
   Widget _buildError(BuildContext context) {
