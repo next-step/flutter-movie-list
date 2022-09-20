@@ -51,8 +51,6 @@ class MovieRepository {
       parameters: {},
     );
 
-    debugPrint('***** response : $response');
-
     return MovieDetail.fromJson(jsonDecode(response));
   }
 }

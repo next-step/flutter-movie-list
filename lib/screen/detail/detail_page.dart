@@ -68,6 +68,16 @@ class _DetailPageState extends State<DetailPage> {
             fit: BoxFit.cover,
             width: double.infinity,
             height: 200,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) {
+                return child;
+              }
+
+              return CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                      : null);
+            },
           ),
         ),
         Align(
