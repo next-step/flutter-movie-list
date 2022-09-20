@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_movie_list/api/api_provider.dart';
 import 'package:flutter_movie_list/model/model.dart';
 import 'package:flutter_movie_list/repository/repository.dart';
+import 'package:flutter_movie_list/router/router.dart';
 import 'package:flutter_movie_list/screen/detail/detail_screen.dart';
 import 'package:flutter_movie_list/screen/home/home_bloc.dart';
 
@@ -116,8 +117,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void moveDetailById(int id) {
-    debugPrint('moveDetailById : $id');
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailScreen(id: id)));
+    Navigator.pushNamed(context, detailRoute, arguments: id);
   }
 
   Widget _buildError(BuildContext context) {
