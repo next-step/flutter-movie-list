@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_movie_list/api/api_provider.dart';
 import 'package:flutter_movie_list/model/model.dart' show MovieList;
+import 'package:flutter_movie_list/model/src/movie_detail.dart';
 
 class MovieRepository {
   MovieRepository({
@@ -41,5 +43,16 @@ class MovieRepository {
     );
 
     return MovieList.fromJson(jsonDecode(response));
+  }
+
+  Future<MovieDetail> getDetail(int id) async {
+    final response = await _apiProvider.get(
+      path: 'movie/$id',
+      parameters: {},
+    );
+
+    debugPrint('***** response : $response');
+
+    return MovieDetail.fromJson(jsonDecode(response));
   }
 }
