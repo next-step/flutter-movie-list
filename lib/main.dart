@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_movie_list/api/api_provider.dart';
-import 'package:flutter_movie_list/repository/repository.dart';
-import 'package:flutter_movie_list/screen/home_screen.dart';
+import 'package:flutter_movie_list/router/router.dart' as router;
+import 'package:flutter_movie_list/router/router.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,14 +16,12 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'Flutter Demo',
+      onGenerateRoute: router.generateRoute,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: RepositoryProvider(
-        create: (context) => MovieRepository(apiProvider: ApiProviderImpl()),
-        child: const HomeScreen(),
-      ),
+      initialRoute: homeRoute,
     );
   }
 }

@@ -1,0 +1,1 @@
+class UnknownRoutingException implements Exception {}

@@ -1,9 +1,10 @@
 part of '../home_page.dart';
 
 class _CoverCarouselWidget extends StatefulWidget {
-  const _CoverCarouselWidget({required this.movies, Key? key}) : super(key: key);
+  const _CoverCarouselWidget({required this.movies, required this.onTap, Key? key}) : super(key: key);
 
   final MovieList movies;
+  final Function(int) onTap;
 
   @override
   State<_CoverCarouselWidget> createState() => _CoverCarouselWidgetState();
@@ -39,8 +40,11 @@ class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
             scrollDirection: Axis.horizontal,
             itemCount: _movies.length,
             itemBuilder: (context, index) {
-              return _CarouselTile(
-                movie: _movies[index],
+              return GestureDetector(
+                onTap: () => widget.onTap(_movies[index].id),
+                child: _CarouselTile(
+                  movie: _movies[index],
+                ),
               );
             },
             onPageChanged: (index) {
@@ -84,7 +88,7 @@ class _CarouselIndicatorState extends State<_CarouselIndicator> {
       spacing: 3,
       children: List.generate(
         widget.totalCount,
-            (index) => Container(
+        (index) => Container(
           width: 7,
           height: 7,
           decoration: BoxDecoration(

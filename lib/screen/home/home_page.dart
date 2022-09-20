@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_movie_list/api/api_provider.dart';
 import 'package:flutter_movie_list/model/model.dart';
 import 'package:flutter_movie_list/repository/repository.dart';
-import 'package:flutter_movie_list/screen/home_bloc.dart';
+import 'package:flutter_movie_list/router/router.dart';
+import 'package:flutter_movie_list/screen/detail/detail_screen.dart';
+import 'package:flutter_movie_list/screen/home/home_bloc.dart';
 
 part 'widget/cover_carousel.dart';
 
@@ -98,11 +100,11 @@ class _HomePageState extends State<HomePage> {
       itemBuilder: (BuildContext context, int index) {
         switch (Section.values[index]) {
           case Section.nowPlaying:
-            return _CoverCarouselWidget(movies: state.nowPlaying);
+            return _CoverCarouselWidget(movies: state.nowPlaying, onTap: moveDetailById);
           case Section.popular:
-            return _PosterCarouselWidget(type: PosterType.popular, movies: state.popular);
+            return _PosterCarouselWidget(type: PosterType.popular, movies: state.popular, onTap: moveDetailById);
           case Section.upcoming:
-            return _PosterCarouselWidget(type: PosterType.upcoming, movies: state.upcoming);
+            return _PosterCarouselWidget(type: PosterType.upcoming, movies: state.upcoming, onTap: moveDetailById);
           default:
             throw UnimplementedError();
         }
@@ -112,6 +114,10 @@ class _HomePageState extends State<HomePage> {
         return const Divider();
       },
     );
+  }
+
+  void moveDetailById(int id) {
+    Navigator.pushNamed(context, detailRoute, arguments: id);
   }
 
   Widget _buildError(BuildContext context) {
