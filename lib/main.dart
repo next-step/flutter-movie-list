@@ -22,10 +22,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: RepositoryProvider(
-        create: (context) => MovieRepository(apiProvider: ApiProviderImpl()),
-        child: const HomeScreen(),
-      ),
+      home: const HomeScreen(),
     );
   }
 }
