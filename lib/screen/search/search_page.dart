@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_movie_list/screen/search/search_bloc.dart';
@@ -10,16 +12,12 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  @override
-  void initState() {
-    context.read<SearchBloc>().add(SearchMovies(query: '토르'));
-    super.initState();
-  }
+  final textFieldController = TextEditingController();
+
+  Timer? _debounce;
 
   @override
   Widget build(BuildContext context) {
-    final textFieldController = TextEditingController();
-
     return BlocConsumer<SearchBloc, SearchState>(
       listener: (context, state) {},
       builder: (context, state) {
@@ -31,6 +29,7 @@ class _SearchPageState extends State<SearchPage> {
                 Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: TextField(
+                    onChanged: _onSearchChanged,
                     controller: textFieldController,
                     cursorColor: Colors.grey,
                     style: const TextStyle(color: Colors.white),
@@ -38,14 +37,15 @@ class _SearchPageState extends State<SearchPage> {
                       prefixIcon: IconButton(
                         icon: const Icon(Icons.search, size: 22),
                         color: Colors.grey,
-                        onPressed: () {},
+                        onPressed: () {
+                          context.read<SearchBloc>().add(SearchMovies(query: textFieldController.text));
+                          FocusScope.of(context).unfocus();
+                        },
                       ),
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.cancel_rounded, size: 18),
                         color: Colors.grey.withOpacity(0.5),
-                        onPressed: () {
-                          textFieldController.clear();
-                        },
+                        onPressed: () => textFieldController.clear(),
                       ),
                       filled: true,
                       fillColor: Colors.grey.withOpacity(0.4),
@@ -66,6 +66,10 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _buildBody(SearchState state) {
+    if (state is Empty) {
+      return _buildEmpty(context);
+    }
+
     if (state is Loading) {
       return _buildLoading(context);
     }
@@ -77,8 +81,12 @@ class _SearchPageState extends State<SearchPage> {
     return _buildError(context);
   }
 
+  Widget _buildEmpty(BuildContext context) {
+    return const SizedBox();
+  }
+
   Widget _buildLoading(BuildContext context) {
-    return const Center(child: CircularProgressIndicator());
+    return const Expanded(child: Center(child: CircularProgressIndicator()));
   }
 
   Widget _buildLoaded(Loaded state) {
@@ -101,5 +109,22 @@ class _SearchPageState extends State<SearchPage> {
         image: NetworkImage('https://i0.wp.com/learn.onemonth.com/wp-content/uploads/2017/08/1-10.png?w=845&ssl=1'),
       ),
     );
+  }
+
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) {
+      _debounce?.cancel();
+    }
+
+    _debounce = Timer(const Duration(milliseconds: 1000), () {
+      debugPrint(textFieldController.text);
+      context.read<SearchBloc>().add(SearchMovies(query: textFieldController.text));
+    });
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
   }
 }

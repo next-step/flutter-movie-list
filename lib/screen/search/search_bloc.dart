@@ -9,7 +9,7 @@ part 'search_state.dart';
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchBloc({required MovieRepository repository})
       : _repository = repository,
-        super(Loading()) {
+        super(Empty()) {
     on<SearchMovies>(_onSearchMovies);
   }
 
@@ -17,6 +17,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   void _onSearchMovies(SearchMovies event, Emitter<SearchState> emit) async {
     try {
+      emit(Loading());
       final detail = await _repository.search(event.query);
       emit(Loaded(searched: detail));
     } catch(e) {
