@@ -15,31 +15,38 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    final textFieldController = TextEditingController();
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Column(
           children: [
-            // const SizedBox(height: 25),
-            TextField(
-              decoration: InputDecoration(
-                prefixIcon: IconButton(
-                  icon: const Icon(Icons.search, size: 22),
-                  color: Colors.grey,
-                  onPressed: () {},
-                ),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.cancel_rounded, size: 18),
-                  color: Colors.grey.withOpacity(0.5),
-                  onPressed: () {},
-                ),
-                hintText: '검색',
-                hintStyle: const TextStyle(fontSize: 14, color: Colors.white),
-                filled: true,
-                fillColor: Colors.grey.withOpacity(0.4),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: const BorderSide(width: 0, style: BorderStyle.none),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: TextField(
+                controller: textFieldController,
+                cursorColor: Colors.grey,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  prefixIcon: IconButton(
+                    icon: const Icon(Icons.search, size: 22),
+                    color: Colors.grey,
+                    onPressed: () {},
+                  ),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.cancel_rounded, size: 18),
+                    color: Colors.grey.withOpacity(0.5),
+                    onPressed: () {
+                      textFieldController.clear();
+                    },
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey.withOpacity(0.4),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(width: 0, style: BorderStyle.none),
+                  ),
                 ),
               ),
             ),
