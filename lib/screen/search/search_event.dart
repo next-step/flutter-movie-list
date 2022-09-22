@@ -8,3 +8,9 @@ class SearchMovies extends SearchEvent {
 
   final String query;
 }
+
+class ChangeSearchKeyword extends SearchEvent {
+  ChangeSearchKeyword({required this.query});
+
+  final String query;
+}
