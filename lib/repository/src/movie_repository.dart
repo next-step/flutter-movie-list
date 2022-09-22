@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_movie_list/api/api_provider.dart';
 import 'package:flutter_movie_list/model/model.dart' show MovieList;
 import 'package:flutter_movie_list/model/src/movie_detail.dart';
@@ -52,5 +51,17 @@ class MovieRepository {
     );
 
     return MovieDetail.fromJson(jsonDecode(response));
+  }
+
+  Future<MovieList> search(String query) async {
+    final response = await _apiProvider.get(
+      path: 'search/movie',
+      parameters: {
+        'page': "1",
+        'query': query,
+      },
+    );
+
+    return MovieList.fromJson(jsonDecode(response));
   }
 }

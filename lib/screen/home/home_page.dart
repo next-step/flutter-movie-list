@@ -4,7 +4,6 @@ import 'package:flutter_movie_list/api/api_provider.dart';
 import 'package:flutter_movie_list/model/model.dart';
 import 'package:flutter_movie_list/repository/repository.dart';
 import 'package:flutter_movie_list/router/router.dart';
-import 'package:flutter_movie_list/screen/detail/detail_screen.dart';
 import 'package:flutter_movie_list/screen/home/home_bloc.dart';
 
 part 'widget/cover_carousel.dart';
@@ -25,6 +24,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   @override
   void initState() {
     context.read<HomeBloc>().add(FetchMovies());
@@ -42,37 +42,6 @@ class _HomePageState extends State<HomePage> {
             context: context,
             removeTop: true,
             child: _buildBody(context, state),
-          ),
-          bottomNavigationBar: BottomAppBar(
-            color: Colors.black,
-            child: IconTheme(
-              data: const IconThemeData(color: Colors.white),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.home,
-                    ),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.favorite_outline,
-                    ),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: () {},
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.person_outline),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-            ),
           ),
         );
       },

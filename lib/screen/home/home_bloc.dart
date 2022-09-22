@@ -42,4 +42,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     return MovieList();
   }
+
+  @override
+  void onTransition(Transition<HomeEvent, HomeState> transition) {
+    super.onTransition(transition);
+    debugPrint('$transition');
+  }
 }
