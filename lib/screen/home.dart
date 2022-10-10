@@ -4,12 +4,11 @@ import 'package:flutter_movie_list/bloc/movie_bloc.dart';
 import 'package:flutter_movie_list/bloc/src/api_state.dart';
 import 'package:flutter_movie_list/model/model.dart';
 import 'package:flutter_movie_list/repository/repository.dart';
+import 'package:flutter_movie_list/screen/widget/movie_detail.dart';
 
 part 'widget/cover_carousel.dart';
 
 part 'widget/poster_carousel.dart';
-
-part 'widget/movie_detail.dart';
 
 enum Section {
   nowPlaying,

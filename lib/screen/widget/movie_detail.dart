@@ -1,4 +1,7 @@
-part of '../home.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_movie_list/bloc/movie_detail_bloc.dart';
+import 'package:flutter_movie_list/model/model.dart';
 
 class MovieDetailWidgetArgument {
   Movie movie;
@@ -15,13 +18,20 @@ class MovieDetailWidget extends StatefulWidget {
 
   @override
   State<MovieDetailWidget> createState() =>
-      _MovieDetailWidgetState(movie: movie);
+      _MovieDetailWidgetState(movieId: movie.id);
 }
 
 class _MovieDetailWidgetState extends State<MovieDetailWidget> {
-  final Movie movie;
+  final int movieId;
 
-  _MovieDetailWidgetState({required this.movie});
+  _MovieDetailWidgetState({required this.movieId});
+
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<MovieDetailCubit>().loadWithParam(movieId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +42,7 @@ class _MovieDetailWidgetState extends State<MovieDetailWidget> {
         iconTheme: IconThemeData(
           color: Colors.white,
         ),
-        title: Text(movie.title),
+        title: Text('$movieId'),
       ),
       body: Center(
         child: ElevatedButton(
