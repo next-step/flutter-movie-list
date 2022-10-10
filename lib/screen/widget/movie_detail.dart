@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_movie_list/bloc/movie_detail_bloc.dart';
+import 'package:flutter_movie_list/bloc/src/api_state.dart';
 import 'package:flutter_movie_list/model/model.dart';
+import 'package:flutter_movie_list/model/src/movie_detail.dart';
 
 class MovieDetailWidgetArgument {
   Movie movie;
@@ -35,21 +37,79 @@ class _MovieDetailWidgetState extends State<MovieDetailWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
+    return BlocBuilder<MovieDetailCubit, ApiState>(builder: (context, state) {
+      return Scaffold(
         backgroundColor: Colors.black,
-        iconTheme: IconThemeData(
-          color: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
         ),
-        title: Text('$movieId'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text('Go back!'),
+        body: SafeArea(
+          child: state is LoadedState
+              ? _buildContent(state.data)
+              : (state is LoadingState ? _buildLoading() : _buildError()),
+        ),
+      );
+    });
+  }
+
+  Widget _buildLoading() {
+    return const Center(
+      child: Text('Loading...'),
+    );
+  }
+
+  Widget _buildError() {
+    return const Center(
+      child: Text('Error'),
+    );
+  }
+
+  Widget _buildContent(MovieDetail movie) {
+    return SingleChildScrollView(
+      child: Container(
+        child: Column(
+          children: [
+            Image.network(
+                'https://image.tmdb.org/t/p/w500/${movie.posterPath}'),
+            SizedBox(
+              height: 30,
+            ),
+            Text(
+              movie.title ?? '',
+              style: TextStyle(color: Colors.white, fontSize: 24),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Row(
+              children: [
+                Icon(Icons.star, color: Colors.red),
+                SizedBox(
+                  width: 10,
+                ),
+                Text('${movie.voteAverage}' ?? '',
+                    style: TextStyle(color: Colors.white)),
+                SizedBox(
+                  width: 10,
+                ),
+                Text('${movie.releaseDate}' ?? '',
+                    style: TextStyle(color: Colors.white)),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              movie.overview ?? '',
+              style: TextStyle(color: Colors.white),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+          ],
         ),
       ),
     );
