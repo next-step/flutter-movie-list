@@ -10,7 +10,7 @@ class MovieRepository {
 
   final ApiProvider _apiProvider;
 
-  Future<MovieList> getNotPlaying() async {
+  Future<MovieList> getNowPlaying() async {
     final response = await _apiProvider.get(
       path: 'movie/now_playing',
       parameters: {
