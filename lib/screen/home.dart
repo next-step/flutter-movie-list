@@ -9,6 +9,8 @@ part 'widget/cover_carousel.dart';
 
 part 'widget/poster_carousel.dart';
 
+part 'widget/movie_detail.dart';
+
 enum Section {
   nowPlaying,
   popular,
