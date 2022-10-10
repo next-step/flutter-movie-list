@@ -18,7 +18,9 @@ class _MovieDetailWidgetState extends State<_MovieDetail> {
       ),
       body: Center(
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
           child: const Text('Go back!'),
         ),
       ),
