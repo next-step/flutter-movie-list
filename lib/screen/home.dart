@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_movie_list/api/api_provider.dart';
+import 'package:flutter_movie_list/bloc/movie_bloc.dart';
+import 'package:flutter_movie_list/bloc/src/api_state.dart';
 import 'package:flutter_movie_list/model/model.dart';
 import 'package:flutter_movie_list/repository/repository.dart';
 
@@ -31,7 +34,11 @@ class _MyHomePageState extends State<MyHomePage> {
           itemBuilder: (BuildContext context, int index) {
             switch (Section.values[index]) {
               case Section.nowPlaying:
-                return _CoverCarouselWidget();
+                return BlocProvider<NowPlayingMovieCubit>(
+                  create: (BuildContext context) => NowPlayingMovieCubit(
+                      repository: context.read<MovieRepository>()),
+                  child: _CoverCarouselWidget(),
+                );
               case Section.popular:
                 return _PosterCarouselWidget(
                   type: PosterType.popular,
