@@ -24,6 +24,19 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
+        onGenerateRoute: (settings) {
+          if (settings.name == MovieDetailWidget.routeName) {
+            final MovieDetailWidgetArgument args = settings.arguments as MovieDetailWidgetArgument;
+
+            return MaterialPageRoute(
+              builder: (context) {
+                return MovieDetailWidget(
+                  movie: args.movie,
+                );
+              },
+            );
+          }
+        },
         home: MyHomePage(),
       ),
     );

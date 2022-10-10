@@ -1,20 +1,38 @@
 part of '../home.dart';
 
-class _MovieDetail extends StatefulWidget {
-  const _MovieDetail({Key? key}) : super(key: key);
+class MovieDetailWidgetArgument {
+  Movie movie;
 
-  @override
-  State<_MovieDetail> createState() => _MovieDetailWidgetState();
+  MovieDetailWidgetArgument({required this.movie});
 }
 
-class _MovieDetailWidgetState extends State<_MovieDetail> {
+class MovieDetailWidget extends StatefulWidget {
+  static const routeName = '/movieDetail';
+
+  final Movie movie;
+
+  const MovieDetailWidget({Key? key, required this.movie}) : super(key: key);
+
+  @override
+  State<MovieDetailWidget> createState() =>
+      _MovieDetailWidgetState(movie: movie);
+}
+
+class _MovieDetailWidgetState extends State<MovieDetailWidget> {
+  final Movie movie;
+
+  _MovieDetailWidgetState({required this.movie});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: const Text('Movie Detail'),
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+        title: Text(movie.title),
       ),
       body: Center(
         child: ElevatedButton(
