@@ -57,6 +57,10 @@ class _PosterCarouselWidgetState extends State<_PosterCarouselWidget> {
           return _buildCarousel(movies);
         }
 
+        if (state is LoadErrorState) {
+          return _buildError();
+        }
+
         return _buildLoading();
       });
     } else if (widget.type == PosterType.upcoming) {
@@ -68,11 +72,19 @@ class _PosterCarouselWidgetState extends State<_PosterCarouselWidget> {
           return _buildCarousel(movies);
         }
 
+        if (state is LoadErrorState) {
+          return _buildError();
+        }
+
         return _buildLoading();
       });
     } else {
-      return _buildLoading();
+      return _buildError();
     }
+  }
+
+  Widget _buildError() {
+    return SizedBox.shrink();
   }
 
   Widget _buildLoading() {

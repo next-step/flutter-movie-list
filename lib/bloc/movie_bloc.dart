@@ -34,7 +34,8 @@ class PopularMovieCubit extends MovieCubit {
   void load() async {
     try {
       final movieList = await repository.getPopular();
-      emit(LoadedState<MovieList>(data: movieList));
+      throw Error();
+      // emit(LoadedState<MovieList>(data: movieList));
     } catch (e) {
       emit(LoadErrorState());
     }
@@ -50,7 +51,8 @@ class NowPlayingMovieCubit extends MovieCubit {
   void load() async {
     try {
       final movieList = await repository.getNowPlaying();
-      emit(LoadedState<MovieList>(data: movieList));
+      throw Error();
+      // emit(LoadedState<MovieList>(data: movieList));
     } catch (e) {
       emit(LoadErrorState());
     }

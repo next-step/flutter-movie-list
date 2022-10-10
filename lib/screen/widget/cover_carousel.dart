@@ -54,6 +54,10 @@ class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
         );
       }
 
+      if (state is LoadErrorState) {
+        return SizedBox.shrink();
+      }
+
       return SizedBox(
         height: 340,
         child: Center(
