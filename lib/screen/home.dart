@@ -6,6 +6,7 @@ import 'package:flutter_movie_list/model/model.dart';
 import 'package:flutter_movie_list/repository/repository.dart';
 
 part 'widget/cover_carousel.dart';
+
 part 'widget/poster_carousel.dart';
 
 enum Section {
@@ -24,6 +25,22 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    var repository = context.read<MovieRepository>();
+
+    return MultiBlocProvider(providers: [
+      BlocProvider(
+          create: (BuildContext context) =>
+              NowPlayingMovieCubit(repository: repository)),
+      BlocProvider(
+          create: (BuildContext context) =>
+              PopularMovieCubit(repository: repository)),
+      BlocProvider(
+          create: (BuildContext context) =>
+              UpcomingMovieCubit(repository: repository)),
+    ], child: _buildPage());
+  }
+
+  Widget _buildPage() {
     return Scaffold(
       backgroundColor: Colors.black,
       body: MediaQuery.removePadding(
@@ -33,26 +50,14 @@ class _MyHomePageState extends State<MyHomePage> {
           itemBuilder: (BuildContext context, int index) {
             switch (Section.values[index]) {
               case Section.nowPlaying:
-                return BlocProvider<NowPlayingMovieCubit>(
-                  create: (BuildContext context) => NowPlayingMovieCubit(
-                      repository: context.read<MovieRepository>()),
-                  child: _CoverCarouselWidget(),
-                );
+                return _CoverCarouselWidget();
               case Section.popular:
-                return BlocProvider<PopularMovieCubit>(
-                  create: (BuildContext context) => PopularMovieCubit(
-                      repository: context.read<MovieRepository>()),
-                  child: _PosterCarouselWidget(
-                    type: PosterType.popular,
-                  ),
+                return _PosterCarouselWidget(
+                  type: PosterType.popular,
                 );
               case Section.upcoming:
-                return BlocProvider<UpcomingMovieCubit>(
-                  create: (BuildContext context) => UpcomingMovieCubit(
-                      repository: context.read<MovieRepository>()),
-                  child: _PosterCarouselWidget(
-                    type: PosterType.upcoming,
-                  ),
+                return _PosterCarouselWidget(
+                  type: PosterType.upcoming,
                 );
               default:
                 throw UnimplementedError();
