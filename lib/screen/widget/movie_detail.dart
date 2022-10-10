@@ -72,8 +72,27 @@ class _MovieDetailWidgetState extends State<MovieDetailWidget> {
       child: Container(
         child: Column(
           children: [
-            Image.network(
-                'https://image.tmdb.org/t/p/w500/${movie.posterPath}'),
+            Image.network('https://image.tmdb.org/t/p/w500/${movie.posterPath}',
+                loadingBuilder: (BuildContext context, Widget child,
+                    ImageChunkEvent? loadingProgress) {
+
+              if (loadingProgress == null) {
+                return child;
+              }
+
+              return  SizedBox(
+                height: 340,
+                child: Center(
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    child: CircularProgressIndicator(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              );
+            }),
             SizedBox(
               height: 30,
             ),
