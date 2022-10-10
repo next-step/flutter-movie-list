@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_movie_list/api/api_provider.dart';
 import 'package:flutter_movie_list/bloc/movie_bloc.dart';
 import 'package:flutter_movie_list/bloc/src/api_state.dart';
 import 'package:flutter_movie_list/model/model.dart';
@@ -40,12 +39,20 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: _CoverCarouselWidget(),
                 );
               case Section.popular:
-                return _PosterCarouselWidget(
-                  type: PosterType.popular,
+                return BlocProvider<PopularMovieCubit>(
+                  create: (BuildContext context) => PopularMovieCubit(
+                      repository: context.read<MovieRepository>()),
+                  child: _PosterCarouselWidget(
+                    type: PosterType.popular,
+                  ),
                 );
               case Section.upcoming:
-                return _PosterCarouselWidget(
-                  type: PosterType.upcoming,
+                return BlocProvider<UpcomingMovieCubit>(
+                  create: (BuildContext context) => UpcomingMovieCubit(
+                      repository: context.read<MovieRepository>()),
+                  child: _PosterCarouselWidget(
+                    type: PosterType.upcoming,
+                  ),
                 );
               default:
                 throw UnimplementedError();
