@@ -31,9 +31,6 @@ class _PosterCarouselWidget extends StatefulWidget {
 }
 
 class _PosterCarouselWidgetState extends State<_PosterCarouselWidget> {
-  final MovieRepository _repository = MovieRepository(apiProvider: ApiProviderImpl());
-  List<Movie> _movies = [];
-
   @override
   void initState() {
     super.initState();
@@ -41,27 +38,68 @@ class _PosterCarouselWidgetState extends State<_PosterCarouselWidget> {
     _loadMovies();
   }
 
-  void _loadMovies() async {
-    late List<Movie> movies;
-
+  void _loadMovies() {
     if (widget.type == PosterType.popular) {
-      final result = await _repository.getPopular();
-      movies = result.results;
+      context.read<PopularMovieCubit>().load();
     } else if (widget.type == PosterType.upcoming) {
-      final result = await _repository.getUpcoming();
-      movies = result.results;
-    } else {
-      //do nothing
-      movies = [];
+      context.read<UpcomingMovieCubit>().load();
     }
-
-    setState(() {
-      _movies = movies;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.type == PosterType.popular) {
+      return BlocBuilder<PopularMovieCubit, ApiState>(
+          builder: (context, state) {
+        if (state is LoadedState) {
+          List<Movie> movies = state.data.results;
+
+          return _buildCarousel(movies);
+        }
+
+        if (state is LoadErrorState) {
+          return _buildError();
+        }
+
+        return _buildLoading();
+      });
+    } else if (widget.type == PosterType.upcoming) {
+      return BlocBuilder<UpcomingMovieCubit, ApiState>(
+          builder: (context, state) {
+        if (state is LoadedState) {
+          List<Movie> movies = state.data.results;
+
+          return _buildCarousel(movies);
+        }
+
+        if (state is LoadErrorState) {
+          return _buildError();
+        }
+
+        return _buildLoading();
+      });
+    } else {
+      return _buildError();
+    }
+  }
+
+  Widget _buildError() {
+    return SizedBox.shrink();
+  }
+
+  Widget _buildLoading() {
+    return const Center(
+      child: SizedBox(
+        width: 42,
+        height: 42,
+        child: CircularProgressIndicator(
+          color: Colors.grey,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCarousel(List<Movie> movies) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -85,19 +123,19 @@ class _PosterCarouselWidgetState extends State<_PosterCarouselWidget> {
           ),
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: _movies.length,
+            itemCount: movies.length,
             itemBuilder: (context, index) {
               if (index == 0) {
                 return Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: _PosterTile(
-                    movie: _movies[index],
+                    movie: movies[index],
                   ),
                 );
               }
 
               return _PosterTile(
-                movie: _movies[index],
+                movie: movies[index],
               );
             },
             separatorBuilder: (context, index) {
@@ -122,33 +160,41 @@ class _PosterTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 150,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12.0),
-            child: Image.network(
-              'https://image.tmdb.org/t/p/w500/${movie.posterPath}',
-              fit: BoxFit.fitHeight,
-              height: 230,
-            ),
+    return GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            MovieDetailWidget.routeName,
+            arguments: MovieDetailWidgetArgument(movie: movie),
+          );
+        },
+        child: Container(
+          width: 150,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12.0),
+                child: Image.network(
+                  'https://image.tmdb.org/t/p/w500/${movie.posterPath}',
+                  fit: BoxFit.fitHeight,
+                  height: 230,
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                movie.title,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Text(
-            movie.title,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
+        ));
   }
 }

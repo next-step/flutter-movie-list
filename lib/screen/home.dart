@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_movie_list/api/api_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_movie_list/bloc/movie_bloc.dart';
+import 'package:flutter_movie_list/bloc/src/api_state.dart';
 import 'package:flutter_movie_list/model/model.dart';
 import 'package:flutter_movie_list/repository/repository.dart';
+import 'package:flutter_movie_list/screen/widget/movie_detail.dart';
 
 part 'widget/cover_carousel.dart';
+
 part 'widget/poster_carousel.dart';
 
 enum Section {
@@ -22,6 +26,22 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    var repository = context.read<MovieRepository>();
+
+    return MultiBlocProvider(providers: [
+      BlocProvider(
+          create: (BuildContext context) =>
+              NowPlayingMovieCubit(repository: repository)),
+      BlocProvider(
+          create: (BuildContext context) =>
+              PopularMovieCubit(repository: repository)),
+      BlocProvider(
+          create: (BuildContext context) =>
+              UpcomingMovieCubit(repository: repository)),
+    ], child: _buildPage());
+  }
+
+  Widget _buildPage() {
     return Scaffold(
       backgroundColor: Colors.black,
       body: MediaQuery.removePadding(

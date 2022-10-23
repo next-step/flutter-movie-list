@@ -22,15 +22,19 @@ class ApiProviderImpl implements ApiProvider {
   final _language = 'ko-KR';
 
   @override
-  Future<String> get({required String path, Map<String, String>? parameters}) async {
+  Future<String> get(
+      {required String path,
+      Map<String, String>? parameters}) async {
     if (_apiKey.isEmpty) {
       throw Exception('apiKey를 발급받아주세요.');
     }
 
-    parameters?['language'] = _language;
-    parameters?['api_key'] = _apiKey;
+    Map<String, String> p = parameters ?? {};
 
-    var uri = Uri.https(_host, '/$_apiVersion/$path', parameters);
+    p['language'] = _language;
+    p['api_key'] = _apiKey;
+
+    var uri = Uri.https(_host, '/$_apiVersion/$path', p);
     var response = await http.get(uri);
 
     return response.body;
