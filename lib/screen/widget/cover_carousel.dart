@@ -9,17 +9,17 @@ class _CoverCarouselWidget extends StatefulWidget {
 
 class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
   late final MovieListBloc _movieListBloc;
+  final _currentIndexCubit = _IndexCubit();
 
   @override
   void initState() {
     super.initState();
 
     _movieListBloc = MovieListBloc(
-      repository: MovieRepository(
-        apiProvider: ApiProviderImpl(),
-      ),
-      section: Section.nowPlaying
-    );
+        repository: MovieRepository(
+          apiProvider: ApiProviderImpl(),
+        ),
+        section: Section.nowPlaying);
   }
 
   @override
@@ -30,35 +30,36 @@ class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _movieListBloc,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => _movieListBloc),
+        BlocProvider(create: (context) => _currentIndexCubit)
+      ],
       child: SizedBox(
         height: 340,
         child: Stack(
           children: [
-            BlocConsumer<MovieListBloc, MovieListState>(
-                listener: (context, state) {},
-                builder: (context, state) {
-                  return PageView.builder(
+            BlocBuilder<MovieListBloc, MovieListState>(
+              builder: (context, state) {
+                return PageView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: state.movies.length,
+                    itemCount: state.length,
                     itemBuilder: (context, index) {
                       return _CarouselTile(
                         movie: state.movies[index],
                       );
                     },
-                    onPageChanged: (index) =>
-                        _movieListBloc.add(ChangeIndexEvent(index)),
-                  );
-                }),
+                    onPageChanged: (index) {
+                      _currentIndexCubit.changeIndex(index);
+                    });
+              },
+            ),
             Positioned(
               left: 20,
               bottom: 5,
-              child: BlocConsumer<MovieListBloc, MovieListState>(
-                listener: (context, state) {},
+              child: BlocBuilder<MovieListBloc, MovieListState>(
                 builder: (context, state) => _CarouselIndicator(
                   totalCount: state.movies.length,
-                  currentIndex: state.currentIndex,
                 ),
               ),
             ),
@@ -72,12 +73,10 @@ class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
 class _CarouselIndicator extends StatefulWidget {
   const _CarouselIndicator({
     required this.totalCount,
-    required this.currentIndex,
     Key? key,
   }) : super(key: key);
 
   final int totalCount;
-  final int currentIndex;
 
   @override
   State<_CarouselIndicator> createState() => _CarouselIndicatorState();
@@ -90,14 +89,16 @@ class _CarouselIndicatorState extends State<_CarouselIndicator> {
       spacing: 3,
       children: List.generate(
         widget.totalCount,
-        (index) => Container(
-          width: 7,
-          height: 7,
-          decoration: BoxDecoration(
-            color: index == widget.currentIndex
-                ? Colors.white.withOpacity(0.8)
-                : Colors.grey.withOpacity(0.2),
-            shape: BoxShape.circle,
+        (index) => BlocBuilder<_IndexCubit, int>(
+          builder: (context, state) => Container(
+            width: 7,
+            height: 7,
+            decoration: BoxDecoration(
+              color: index == state
+                  ? Colors.white.withOpacity(0.8)
+                  : Colors.grey.withOpacity(0.2),
+              shape: BoxShape.circle,
+            ),
           ),
         ),
       ),
@@ -140,5 +141,13 @@ class _CarouselTile extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _IndexCubit extends Cubit<int> {
+  _IndexCubit() : super(0);
+
+  void changeIndex(int index) {
+    emit(index);
   }
 }

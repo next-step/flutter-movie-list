@@ -16,12 +16,6 @@ class LoadMoviesEvent extends MovieListEvent {
   LoadMoviesEvent(this.section);
 }
 
-class ChangeIndexEvent extends MovieListEvent {
-  final int index;
-
-  ChangeIndexEvent(this.index);
-}
-
 class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
   final MovieRepository repository;
 
@@ -46,10 +40,6 @@ class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
       emit(MovieListState(movies: movieList.results));
     });
 
-    on<ChangeIndexEvent>((event, emit) {
-      emit(MovieListState(movies: state.movies, currentIndex: event.index));
-    });
-
     if (section == null) {
       return;
     }
@@ -60,12 +50,10 @@ class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
 
 class MovieListState {
   final List<Movie> movies;
-  final int currentIndex;
 
   int get length => movies.length;
 
   MovieListState({
     this.movies = const [],
-    this.currentIndex = 0,
   });
 }
