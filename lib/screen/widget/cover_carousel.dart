@@ -18,6 +18,7 @@ class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
       repository: MovieRepository(
         apiProvider: ApiProviderImpl(),
       ),
+      section: Section.nowPlaying
     );
   }
 

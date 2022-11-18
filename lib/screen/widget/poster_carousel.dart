@@ -16,6 +16,15 @@ extension on PosterType {
         return 'Upcoming';
     }
   }
+
+  Section get section {
+    switch (this) {
+      case PosterType.popular:
+        return Section.popular;
+      case PosterType.upcoming:
+        return Section.upcoming;
+    }
+  }
 }
 
 class _PosterCarouselWidget extends StatefulWidget {
@@ -31,84 +40,79 @@ class _PosterCarouselWidget extends StatefulWidget {
 }
 
 class _PosterCarouselWidgetState extends State<_PosterCarouselWidget> {
-  final MovieRepository _repository = MovieRepository(apiProvider: ApiProviderImpl());
-  List<Movie> _movies = [];
+  late final MovieListBloc _movieListBloc;
 
   @override
   void initState() {
     super.initState();
 
-    _loadMovies();
+    _movieListBloc = MovieListBloc(
+      repository: MovieRepository(
+        apiProvider: ApiProviderImpl(),
+      ),
+      section: widget.type.section
+    );
   }
 
-  void _loadMovies() async {
-    late List<Movie> movies;
-
-    if (widget.type == PosterType.popular) {
-      final result = await _repository.getPopular();
-      movies = result.results;
-    } else if (widget.type == PosterType.upcoming) {
-      final result = await _repository.getUpcoming();
-      movies = result.results;
-    } else {
-      //do nothing
-      movies = [];
-    }
-
-    setState(() {
-      _movies = movies;
-    });
+  @override
+  void dispose() {
+    super.dispose();
+    _movieListBloc.close();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 20.0),
-          child: Text(
-            widget.type.name,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
+    return BlocProvider(
+        create: (context) => _movieListBloc,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: Text(
+                widget.type.name,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-          ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: 300,
-          ),
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: _movies.length,
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: _PosterTile(
-                    movie: _movies[index],
-                  ),
-                );
-              }
+            const SizedBox(
+              height: 10,
+            ),
+            ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxHeight: 300,
+              ),
+              child: BlocConsumer<MovieListBloc, MovieListState>(
+                  listener: (context, state) {},
+                  builder: (context, state) => ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: state.length,
+                        itemBuilder: (context, index) {
+                          if (index == 0) {
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 20.0),
+                              child: _PosterTile(
+                                movie: state.movies[index],
+                              ),
+                            );
+                          }
 
-              return _PosterTile(
-                movie: _movies[index],
-              );
-            },
-            separatorBuilder: (context, index) {
-              return SizedBox(
-                width: 20,
-              );
-            },
-          ),
-        ),
-      ],
-    );
+                          return _PosterTile(
+                            movie: state.movies[index],
+                          );
+                        },
+                        separatorBuilder: (context, index) {
+                          return const SizedBox(
+                            width: 20,
+                          );
+                        },
+                      )),
+            ),
+          ],
+        ));
   }
 }
 
@@ -122,7 +126,7 @@ class _PosterTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 150,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,12 +139,12 @@ class _PosterTile extends StatelessWidget {
               height: 230,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Text(
             movie.title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Colors.white,
