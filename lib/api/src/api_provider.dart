@@ -27,7 +27,7 @@ class ApiProviderImpl implements ApiProvider {
   @override
   Future<String> get({required String path, Map<String, String>? parameters}) async {
     if (_apiKey.isEmpty) {
-      throw Exception('apiKey를 발급받아주세요.');
+      throw Exception('apiKey 를 발급받아주세요.');
     }
 
     parameters?['language'] = _language;
