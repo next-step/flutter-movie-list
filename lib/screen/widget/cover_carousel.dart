@@ -1,38 +1,37 @@
 part of '../home.dart';
 
 class _CoverCarouselWidget extends StatefulWidget {
-  const _CoverCarouselWidget({Key? key}) : super(key: key);
+  final MovieListBloc movieListBloc;
+
+  const _CoverCarouselWidget({
+    Key? key,
+    required this.movieListBloc,
+  }) : super(key: key);
 
   @override
   State<_CoverCarouselWidget> createState() => _CoverCarouselWidgetState();
 }
 
 class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
-  late final MovieListBloc _movieListBloc;
   final _currentIndexCubit = _IndexCubit();
 
   @override
   void initState() {
     super.initState();
-
-    _movieListBloc = MovieListBloc(
-        repository: MovieRepository(
-          apiProvider: ApiProviderImpl(),
-        ),
-        section: Section.nowPlaying);
+    widget.movieListBloc.add(LoadMoviesEvent(Section.nowPlaying));
   }
 
   @override
   void dispose() {
     super.dispose();
-    _movieListBloc.close();
+    _currentIndexCubit.close();
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => _movieListBloc),
+        BlocProvider(create: (context) => widget.movieListBloc),
         BlocProvider(create: (context) => _currentIndexCubit)
       ],
       child: SizedBox(
@@ -40,33 +39,46 @@ class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
         child: Stack(
           children: [
             BlocBuilder<MovieListBloc, MovieListState>(
+              buildWhen: _whenMovieListLoaded,
               builder: (context, state) {
-                return PageView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: state.length,
-                    itemBuilder: (context, index) {
-                      return _CarouselTile(
-                        movie: state.movies[index],
-                      );
-                    },
-                    onPageChanged: (index) {
-                      _currentIndexCubit.changeIndex(index);
-                    });
+                if (state is MovieListLoadedState) {
+                  return PageView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: state.length,
+                      itemBuilder: (context, index) {
+                        return _CarouselTile(
+                          movie: state.movies[index],
+                        );
+                      },
+                      onPageChanged: (index) {
+                        _currentIndexCubit.changeIndex(index);
+                      });
+                }
+                return const SizedBox();
               },
             ),
             Positioned(
               left: 20,
               bottom: 5,
               child: BlocBuilder<MovieListBloc, MovieListState>(
-                builder: (context, state) => _CarouselIndicator(
-                  totalCount: state.movies.length,
-                ),
+                buildWhen: _whenMovieListLoaded,
+                builder: (context, state) {
+                  return _CarouselIndicator(
+                    totalCount:
+                        state is MovieListLoadedState ? state.length : 0,
+                  );
+                },
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  bool _whenMovieListLoaded(MovieListState before, MovieListState after) {
+    return after is MovieListLoadedState &&
+        after.section == Section.nowPlaying;
   }
 }
 
@@ -90,11 +102,11 @@ class _CarouselIndicatorState extends State<_CarouselIndicator> {
       children: List.generate(
         widget.totalCount,
         (index) => BlocBuilder<_IndexCubit, int>(
-          builder: (context, state) => Container(
+          builder: (context, indexState) => Container(
             width: 7,
             height: 7,
             decoration: BoxDecoration(
-              color: index == state
+              color: index == indexState
                   ? Colors.white.withOpacity(0.8)
                   : Colors.grey.withOpacity(0.2),
               shape: BoxShape.circle,

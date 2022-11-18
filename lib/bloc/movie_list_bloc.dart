@@ -18,42 +18,68 @@ class LoadMoviesEvent extends MovieListEvent {
 
 class MovieListBloc extends Bloc<MovieListEvent, MovieListState> {
   final MovieRepository repository;
+  int _loadingErrCount = 0;
 
   MovieListBloc({
     required this.repository,
-    Section? section,
-  }) : super(MovieListState()) {
+  }) : super(MovieListLoadingState()) {
+
     on<LoadMoviesEvent>((event, emit) async {
       late final MovieList movieList;
 
-      switch (event.section) {
-        case Section.nowPlaying:
-          movieList = await repository.getNotPlaying();
-          break;
-        case Section.upcoming:
-          movieList = await repository.getUpcoming();
-          break;
-        case Section.popular:
-          movieList = await repository.getPopular();
-          break;
+      emit(MovieListLoadingState());
+
+      try {
+        switch (event.section) {
+          case Section.nowPlaying:
+            movieList = await repository.getNotPlaying();
+            break;
+          case Section.upcoming:
+            movieList = await repository.getUpcoming();
+            break;
+          case Section.popular:
+            movieList = await repository.getPopular();
+            break;
+        }
+        emit(MovieListLoadedState(movies: movieList.results, section: event.section));
+      } on ApiLoadingError {
+        emit(MovieListLoadedState.empty());
+        _loadingErrCount++;
+
+        if(_loadingErrCount > 1){
+          emit(MovieListErrorState(errMsg: '정보를 가져오는데 실패하였습니다.'));
+        }
       }
-      emit(MovieListState(movies: movieList.results));
     });
-
-    if (section == null) {
-      return;
-    }
-
-    add(LoadMoviesEvent(section));
   }
 }
 
-class MovieListState {
+abstract class MovieListState {}
+
+class MovieListLoadingState extends MovieListState {}
+
+class MovieListLoadedState extends MovieListState {
+  final Section? section;
   final List<Movie> movies;
 
   int get length => movies.length;
 
-  MovieListState({
-    this.movies = const [],
+  static final _empty = MovieListLoadedState(movies: []);
+
+  MovieListLoadedState({
+    required this.movies,
+    this.section,
+  });
+
+  factory MovieListLoadedState.empty() {
+    return _empty;
+  }
+}
+
+class MovieListErrorState extends MovieListState {
+  final String errMsg;
+
+  MovieListErrorState({
+    this.errMsg = '',
   });
 }

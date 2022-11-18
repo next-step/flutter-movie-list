@@ -28,7 +28,7 @@ class MovieRepository {
         'page': "1",
       },
     );
-
+    //throw ApiLoadingError('error test1');
     return MovieList.fromJson(jsonDecode(response));
   }
 
@@ -39,7 +39,14 @@ class MovieRepository {
         'page': "1",
       },
     );
-
+    //throw ApiLoadingError('error test2');
     return MovieList.fromJson(jsonDecode(response));
   }
+}
+
+class ApiLoadingError extends Error {
+  final String message;
+  ApiLoadingError(this.message);
+  @override
+  String toString() => "ApiLoadingError message: $message";
 }
