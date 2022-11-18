@@ -16,7 +16,7 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -31,13 +31,13 @@ class _MyHomePageState extends State<MyHomePage> {
           itemBuilder: (BuildContext context, int index) {
             switch (Section.values[index]) {
               case Section.nowPlaying:
-                return _CoverCarouselWidget();
+                return const _CoverCarouselWidget();
               case Section.popular:
-                return _PosterCarouselWidget(
+                return const _PosterCarouselWidget(
                   type: PosterType.popular,
                 );
               case Section.upcoming:
-                return _PosterCarouselWidget(
+                return const _PosterCarouselWidget(
                   type: PosterType.upcoming,
                 );
               default:
@@ -46,35 +46,35 @@ class _MyHomePageState extends State<MyHomePage> {
           },
           itemCount: Section.values.length,
           separatorBuilder: (BuildContext context, int index) {
-            return Divider();
+            return const Divider();
           },
         ),
       ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.black,
         child: IconTheme(
-          data: IconThemeData(color: Colors.white),
+          data: const IconThemeData(color: Colors.white),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.home,
                 ),
                 onPressed: () {},
               ),
               IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.favorite_outline,
                 ),
                 onPressed: () {},
               ),
               IconButton(
-                icon: Icon(Icons.search),
+                icon: const Icon(Icons.search),
                 onPressed: () {},
               ),
               IconButton(
-                icon: Icon(Icons.person_outline),
+                icon: const Icon(Icons.person_outline),
                 onPressed: () {},
               ),
             ],

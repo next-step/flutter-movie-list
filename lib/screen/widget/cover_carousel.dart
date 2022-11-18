@@ -120,7 +120,7 @@ class _CarouselTile extends StatelessWidget {
         children: [
           Text(
             movie.title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Colors.white,
