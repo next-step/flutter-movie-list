@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
 
 abstract class ApiProvider {
@@ -18,13 +20,14 @@ class ApiProviderImpl implements ApiProvider {
 
   final _host = 'api.themoviedb.org';
   final _apiVersion = 3;
-  final _apiKey = '';
+  //please run with '--dart-define API_KEY=blah blah'
+  static const _apiKey = String.fromEnvironment('API_KEY');
   final _language = 'ko-KR';
 
   @override
   Future<String> get({required String path, Map<String, String>? parameters}) async {
     if (_apiKey.isEmpty) {
-      throw Exception('apiKey를 발급받아주세요.');
+      throw Exception('apiKey 를 발급받아주세요.');
     }
 
     parameters?['language'] = _language;

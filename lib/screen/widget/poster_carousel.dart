@@ -16,94 +16,80 @@ extension on PosterType {
         return 'Upcoming';
     }
   }
+
+  Section get section {
+    switch (this) {
+      case PosterType.popular:
+        return Section.popular;
+      case PosterType.upcoming:
+        return Section.upcoming;
+    }
+  }
 }
 
-class _PosterCarouselWidget extends StatefulWidget {
+class _PosterCarouselWidget extends StatelessWidget {
+  final PosterType type;
+
   const _PosterCarouselWidget({
     required this.type,
     Key? key,
   }) : super(key: key);
 
-  final PosterType type;
-
-  @override
-  State<_PosterCarouselWidget> createState() => _PosterCarouselWidgetState();
-}
-
-class _PosterCarouselWidgetState extends State<_PosterCarouselWidget> {
-  final MovieRepository _repository = MovieRepository(apiProvider: ApiProviderImpl());
-  List<Movie> _movies = [];
-
-  @override
-  void initState() {
-    super.initState();
-
-    _loadMovies();
-  }
-
-  void _loadMovies() async {
-    late List<Movie> movies;
-
-    if (widget.type == PosterType.popular) {
-      final result = await _repository.getPopular();
-      movies = result.results;
-    } else if (widget.type == PosterType.upcoming) {
-      final result = await _repository.getUpcoming();
-      movies = result.results;
-    } else {
-      //do nothing
-      movies = [];
-    }
-
-    setState(() {
-      _movies = movies;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    context.read<MovieListBloc>().add(LoadMoviesEvent(type.section));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 20.0),
           child: Text(
-            widget.type.name,
-            style: TextStyle(
+            type.name,
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 25,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         ConstrainedBox(
-          constraints: BoxConstraints(
+          constraints: const BoxConstraints(
             maxHeight: 300,
           ),
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: _movies.length,
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return Padding(
-                  padding: const EdgeInsets.only(left: 20.0),
-                  child: _PosterTile(
-                    movie: _movies[index],
-                  ),
+          child: BlocBuilder<MovieListBloc, MovieListState>(
+            buildWhen: (before, after) =>
+                after is MovieListLoadedState &&
+                after.section == type.section,
+            builder: (context, state) {
+              if (state is MovieListLoadedState) {
+                return ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: state.length,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: _PosterTile(
+                          movie: state.movies[index],
+                        ),
+                      );
+                    }
+
+                    return _PosterTile(
+                      movie: state.movies[index],
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(
+                      width: 20,
+                    );
+                  },
                 );
               }
-
-              return _PosterTile(
-                movie: _movies[index],
-              );
-            },
-            separatorBuilder: (context, index) {
-              return SizedBox(
-                width: 20,
-              );
+              return const SizedBox();
             },
           ),
         ),
@@ -122,7 +108,7 @@ class _PosterTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 150,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,12 +121,12 @@ class _PosterTile extends StatelessWidget {
               height: 230,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Text(
             movie.title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Colors.white,

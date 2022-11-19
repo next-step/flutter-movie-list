@@ -1,75 +1,70 @@
 part of '../home.dart';
 
-class _CoverCarouselWidget extends StatefulWidget {
-  const _CoverCarouselWidget({Key? key}) : super(key: key);
+class _CoverCarouselWidget extends StatelessWidget {
 
-  @override
-  State<_CoverCarouselWidget> createState() => _CoverCarouselWidgetState();
-}
-
-class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
-  final MovieRepository _repository = MovieRepository(apiProvider: ApiProviderImpl());
-  List<Movie> _movies = [];
-  int _currentIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _loadMovies();
-  }
-
-  void _loadMovies() async {
-    final movies = await _repository.getNotPlaying();
-
-    setState(() {
-      _movies = movies.results;
-    });
-  }
+  const _CoverCarouselWidget({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 340,
-      child: Stack(
-        children: [
-          PageView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: _movies.length,
-            itemBuilder: (context, index) {
-              return _CarouselTile(
-                movie: _movies[index],
-              );
-            },
-            onPageChanged: (index) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-          ),
-          Positioned(
-            left: 20,
-            bottom: 5,
-            child: _CarouselIndicator(
-              totalCount: _movies.length,
-              currentIndex: _currentIndex,
+    context.read<MovieListBloc>().add(LoadMoviesEvent(Section.nowPlaying));
+    return BlocProvider<_IndexCubit>(
+      create: (context) => _IndexCubit(),
+      child: SizedBox(
+        height: 340,
+        child: Stack(
+          children: [
+            BlocBuilder<MovieListBloc, MovieListState>(
+              buildWhen: _whenMovieListLoaded,
+              builder: (context, state) {
+                if (state is MovieListLoadedState) {
+                  return PageView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: state.length,
+                      itemBuilder: (context, index) {
+                        return _CarouselTile(
+                          movie: state.movies[index],
+                        );
+                      },
+                      onPageChanged: (index) {
+                        BlocProvider.of<_IndexCubit>(context).changeIndex(index);
+                      });
+                }
+                return const SizedBox();
+              },
             ),
-          ),
-        ],
+            Positioned(
+              left: 20,
+              bottom: 5,
+              child: BlocBuilder<MovieListBloc, MovieListState>(
+                buildWhen: _whenMovieListLoaded,
+                builder: (context, state) {
+                  return _CarouselIndicator(
+                    totalCount:
+                        state is MovieListLoadedState ? state.length : 0,
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  bool _whenMovieListLoaded(MovieListState before, MovieListState after) {
+    return after is MovieListLoadedState && after.section == Section.nowPlaying;
   }
 }
 
 class _CarouselIndicator extends StatefulWidget {
   const _CarouselIndicator({
     required this.totalCount,
-    required this.currentIndex,
     Key? key,
   }) : super(key: key);
 
   final int totalCount;
-  final int currentIndex;
 
   @override
   State<_CarouselIndicator> createState() => _CarouselIndicatorState();
@@ -82,12 +77,16 @@ class _CarouselIndicatorState extends State<_CarouselIndicator> {
       spacing: 3,
       children: List.generate(
         widget.totalCount,
-            (index) => Container(
-          width: 7,
-          height: 7,
-          decoration: BoxDecoration(
-            color: index == widget.currentIndex ? Colors.white.withOpacity(0.8) : Colors.grey.withOpacity(0.2),
-            shape: BoxShape.circle,
+        (index) => BlocBuilder<_IndexCubit, int>(
+          builder: (context, indexState) => Container(
+            width: 7,
+            height: 7,
+            decoration: BoxDecoration(
+              color: index == indexState
+                  ? Colors.white.withOpacity(0.8)
+                  : Colors.grey.withOpacity(0.2),
+              shape: BoxShape.circle,
+            ),
           ),
         ),
       ),
@@ -110,7 +109,8 @@ class _CarouselTile extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: NetworkImage('https://image.tmdb.org/t/p/original/${movie.backdropPath}'),
+          image: NetworkImage(
+              'https://image.tmdb.org/t/p/original/${movie.backdropPath}'),
           fit: BoxFit.cover,
         ),
       ),
@@ -120,7 +120,7 @@ class _CarouselTile extends StatelessWidget {
         children: [
           Text(
             movie.title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -129,5 +129,13 @@ class _CarouselTile extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _IndexCubit extends Cubit<int> {
+  _IndexCubit() : super(0);
+
+  void changeIndex(int index) {
+    emit(index);
   }
 }
