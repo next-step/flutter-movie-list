@@ -1,27 +1,14 @@
 part of '../home.dart';
 
-class _CoverCarouselWidget extends StatefulWidget {
-  final MovieListBloc movieListBloc;
+class _CoverCarouselWidget extends StatelessWidget {
 
   const _CoverCarouselWidget({
     Key? key,
-    required this.movieListBloc,
   }) : super(key: key);
 
   @override
-  State<_CoverCarouselWidget> createState() => _CoverCarouselWidgetState();
-}
-
-class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
-
-  @override
-  void initState() {
-    super.initState();
-    widget.movieListBloc.add(LoadMoviesEvent(Section.nowPlaying));
-  }
-
-  @override
   Widget build(BuildContext context) {
+    context.watch<MovieListBloc>().add(LoadMoviesEvent(Section.nowPlaying));
     return BlocProvider<_IndexCubit>(
       create: (context) => _IndexCubit(),
       child: SizedBox(

@@ -56,18 +56,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemBuilder: (BuildContext context, int index) {
                   switch (Section.values[index]) {
                     case Section.nowPlaying:
-                      return _CoverCarouselWidget(
-                        movieListBloc: context.watch<MovieListBloc>(),
-                      );
+                      return const _CoverCarouselWidget();
                     case Section.popular:
-                      return _PosterCarouselWidget(
+                      return const _PosterCarouselWidget(
                         type: PosterType.popular,
-                        movieListBloc: context.watch<MovieListBloc>(),
                       );
                     case Section.upcoming:
-                      return _PosterCarouselWidget(
+                      return const _PosterCarouselWidget(
                         type: PosterType.upcoming,
-                        movieListBloc: context.watch<MovieListBloc>(),
                       );
                     default:
                       throw UnimplementedError();

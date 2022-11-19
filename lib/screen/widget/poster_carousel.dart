@@ -27,38 +27,24 @@ extension on PosterType {
   }
 }
 
-class _PosterCarouselWidget extends StatefulWidget {
-  final MovieListBloc movieListBloc;
+class _PosterCarouselWidget extends StatelessWidget {
+  final PosterType type;
 
   const _PosterCarouselWidget({
     required this.type,
-    required this.movieListBloc,
     Key? key,
   }) : super(key: key);
 
-  final PosterType type;
-
-  @override
-  State<_PosterCarouselWidget> createState() => _PosterCarouselWidgetState();
-}
-
-class _PosterCarouselWidgetState extends State<_PosterCarouselWidget> {
-  @override
-  void initState() {
-    super.initState();
-
-    widget.movieListBloc.add(LoadMoviesEvent(widget.type.section));
-  }
-
   @override
   Widget build(BuildContext context) {
+    context.watch<MovieListBloc>().add(LoadMoviesEvent(type.section));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 20.0),
           child: Text(
-            widget.type.name,
+            type.name,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 25,
@@ -76,7 +62,7 @@ class _PosterCarouselWidgetState extends State<_PosterCarouselWidget> {
           child: BlocBuilder<MovieListBloc, MovieListState>(
             buildWhen: (before, after) =>
                 after is MovieListLoadedState &&
-                after.section == widget.type.section,
+                after.section == type.section,
             builder: (context, state) {
               if (state is MovieListLoadedState) {
                 return ListView.separated(
