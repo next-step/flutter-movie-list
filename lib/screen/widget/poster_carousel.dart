@@ -52,65 +52,63 @@ class _PosterCarouselWidgetState extends State<_PosterCarouselWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (context) => widget.movieListBloc,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0),
-              child: Text(
-                widget.type.name,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: Text(
+            widget.type.name,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxHeight: 300,
-              ),
-              child: BlocBuilder<MovieListBloc, MovieListState>(
-                buildWhen: (before, after) =>
-                    after is MovieListLoadedState &&
-                    after.section == widget.type.section,
-                builder: (context, state) {
-                  if (state is MovieListLoadedState) {
-                    return ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: state.length,
-                      itemBuilder: (context, index) {
-                        if (index == 0) {
-                          return Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
-                            child: _PosterTile(
-                              movie: state.movies[index],
-                            ),
-                          );
-                        }
-
-                        return _PosterTile(
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxHeight: 300,
+          ),
+          child: BlocBuilder<MovieListBloc, MovieListState>(
+            buildWhen: (before, after) =>
+                after is MovieListLoadedState &&
+                after.section == widget.type.section,
+            builder: (context, state) {
+              if (state is MovieListLoadedState) {
+                return ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: state.length,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: _PosterTile(
                           movie: state.movies[index],
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return const SizedBox(
-                          width: 20,
-                        );
-                      },
+                        ),
+                      );
+                    }
+
+                    return _PosterTile(
+                      movie: state.movies[index],
                     );
-                  }
-                  return const SizedBox();
-                },
-              ),
-            ),
-          ],
-        ));
+                  },
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(
+                      width: 20,
+                    );
+                  },
+                );
+              }
+              return const SizedBox();
+            },
+          ),
+        ),
+      ],
+    );
   }
 }
 

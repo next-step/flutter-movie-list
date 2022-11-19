@@ -13,7 +13,6 @@ class _CoverCarouselWidget extends StatefulWidget {
 }
 
 class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
-  final _currentIndexCubit = _IndexCubit();
 
   @override
   void initState() {
@@ -42,7 +41,7 @@ class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
                         );
                       },
                       onPageChanged: (index) {
-                        _currentIndexCubit.changeIndex(index);
+                        BlocProvider.of<_IndexCubit>(context).changeIndex(index);
                       });
                 }
                 return const SizedBox();
