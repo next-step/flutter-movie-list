@@ -8,7 +8,7 @@ class _CoverCarouselWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<MovieListBloc>().add(LoadMoviesEvent(Section.nowPlaying));
+    context.read<MovieListBloc>().add(LoadMoviesEvent(Section.nowPlaying));
     return BlocProvider<_IndexCubit>(
       create: (context) => _IndexCubit(),
       child: SizedBox(

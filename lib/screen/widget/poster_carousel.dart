@@ -37,7 +37,7 @@ class _PosterCarouselWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<MovieListBloc>().add(LoadMoviesEvent(type.section));
+    context.read<MovieListBloc>().add(LoadMoviesEvent(type.section));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

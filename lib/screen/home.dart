@@ -31,6 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
           context: context,
           removeTop: true,
           child: BlocBuilder<MovieListBloc, MovieListState>(
+            buildWhen: _isMovieListBlocChangeErrorState,
             builder: (context, state) {
               if (state is MovieListErrorState) {
                 return Center(
@@ -110,5 +111,10 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  bool _isMovieListBlocChangeErrorState(MovieListState before, MovieListState after) {
+    return (before is MovieListErrorState && after is MovieListLoadedState) ||
+              (before is MovieListLoadedState && after is MovieListErrorState);
   }
 }
