@@ -6,7 +6,6 @@ import 'package:flutter_movie_list/model/model.dart';
 import 'package:flutter_movie_list/repository/repository.dart';
 
 part 'widget/cover_carousel.dart';
-
 part 'widget/poster_carousel.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -22,12 +21,6 @@ class _MyHomePageState extends State<MyHomePage> {
       apiProvider: ApiProviderImpl(),
     ),
   );
-
-  @override
-  void dispose() {
-    super.dispose();
-    _movieListBloc.close();
-  }
 
   @override
   Widget build(BuildContext context) {

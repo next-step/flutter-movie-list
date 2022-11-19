@@ -22,12 +22,6 @@ class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    _currentIndexCubit.close();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
