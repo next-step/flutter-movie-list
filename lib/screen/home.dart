@@ -6,6 +6,7 @@ import 'package:flutter_movie_list/model/model.dart';
 import 'package:flutter_movie_list/repository/repository.dart';
 
 part 'widget/cover_carousel.dart';
+
 part 'widget/poster_carousel.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -16,16 +17,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final MovieListBloc _movieListBloc = MovieListBloc(
-    repository: MovieRepository(
-      apiProvider: ApiProviderImpl(),
-    ),
-  );
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => _movieListBloc,
+      create: (context) => MovieListBloc(
+        repository: MovieRepository(
+          apiProvider: ApiProviderImpl(),
+        ),
+      ),
       child: Scaffold(
         backgroundColor: Colors.black,
         body: MediaQuery.removePadding(
@@ -58,17 +57,17 @@ class _MyHomePageState extends State<MyHomePage> {
                   switch (Section.values[index]) {
                     case Section.nowPlaying:
                       return _CoverCarouselWidget(
-                        movieListBloc: _movieListBloc,
+                        movieListBloc: context.watch<MovieListBloc>(),
                       );
                     case Section.popular:
                       return _PosterCarouselWidget(
                         type: PosterType.popular,
-                        movieListBloc: _movieListBloc,
+                        movieListBloc: context.watch<MovieListBloc>(),
                       );
                     case Section.upcoming:
                       return _PosterCarouselWidget(
                         type: PosterType.upcoming,
-                        movieListBloc: _movieListBloc,
+                        movieListBloc: context.watch<MovieListBloc>(),
                       );
                     default:
                       throw UnimplementedError();

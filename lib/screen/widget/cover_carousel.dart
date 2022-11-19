@@ -23,11 +23,8 @@ class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => widget.movieListBloc),
-        BlocProvider(create: (context) => _currentIndexCubit)
-      ],
+    return BlocProvider<_IndexCubit>(
+      create: (context) => _IndexCubit(),
       child: SizedBox(
         height: 340,
         child: Stack(
@@ -71,8 +68,7 @@ class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
   }
 
   bool _whenMovieListLoaded(MovieListState before, MovieListState after) {
-    return after is MovieListLoadedState &&
-        after.section == Section.nowPlaying;
+    return after is MovieListLoadedState && after.section == Section.nowPlaying;
   }
 }
 
