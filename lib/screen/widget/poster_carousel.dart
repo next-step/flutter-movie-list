@@ -61,8 +61,7 @@ class _PosterCarouselWidget extends StatelessWidget {
           ),
           child: BlocBuilder<MovieListBloc, MovieListState>(
             buildWhen: (before, after) =>
-                after is MovieListLoadedState &&
-                after.section == type.section,
+                after is MovieListLoadedState && after.section == type.section,
             builder: (context, state) {
               if (state is MovieListLoadedState) {
                 return ListView.separated(
@@ -108,32 +107,36 @@ class _PosterTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 150,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12.0),
-            child: Image.network(
-              'https://image.tmdb.org/t/p/w500/${movie.posterPath}',
-              fit: BoxFit.fitHeight,
-              height: 230,
+    return GestureDetector(
+      onTap: () => Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const Detail())),
+      child: SizedBox(
+        width: 150,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12.0),
+              child: Image.network(
+                'https://image.tmdb.org/t/p/w500/${movie.posterPath}',
+                fit: BoxFit.fitHeight,
+                height: 230,
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            movie.title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              overflow: TextOverflow.ellipsis,
+            const SizedBox(
+              height: 10,
             ),
-          ),
-        ],
+            Text(
+              movie.title,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
