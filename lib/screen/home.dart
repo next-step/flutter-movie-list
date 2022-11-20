@@ -6,6 +6,7 @@ import 'package:flutter_movie_list/model/model.dart';
 import 'package:flutter_movie_list/repository/repository.dart';
 
 part 'widget/cover_carousel.dart';
+
 part 'widget/poster_carousel.dart';
 
 enum Section {
@@ -31,6 +32,10 @@ class _MyHomePageState extends State<MyHomePage> {
         removeTop: true,
         child: MultiBlocProvider(
           providers: [
+            BlocProvider<MoviesBloc>(
+                create: (BuildContext context) => MoviesBloc(
+                    movieRepository:
+                        MovieRepository(apiProvider: ApiProviderImpl()))),
             BlocProvider<MoviesBloc>(
                 create: (BuildContext context) => MoviesBloc(
                     movieRepository:

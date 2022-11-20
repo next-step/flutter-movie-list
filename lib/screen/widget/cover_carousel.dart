@@ -8,8 +8,6 @@ class _CoverCarouselWidget extends StatefulWidget {
 }
 
 class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
-  final MovieRepository _repository = MovieRepository(apiProvider: ApiProviderImpl());
-  List<Movie> _movies = [];
   int _currentIndex = 0;
 
   @override
@@ -20,25 +18,23 @@ class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
   }
 
   void _loadMovies() async {
-    final movies = await _repository.getNotPlaying();
-
-    setState(() {
-      _movies = movies.results;
-    });
+    context.read<MoviesBloc>().add(NowPlayingMoviesFetchEvent());
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Movie> movies = context.read<MoviesBloc>().state.results;
+
     return SizedBox(
       height: 340,
       child: Stack(
         children: [
           PageView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: _movies.length,
+            itemCount: movies.length,
             itemBuilder: (context, index) {
               return _CarouselTile(
-                movie: _movies[index],
+                movie: movies[index],
               );
             },
             onPageChanged: (index) {
@@ -51,7 +47,7 @@ class _CoverCarouselWidgetState extends State<_CoverCarouselWidget> {
             left: 20,
             bottom: 5,
             child: _CarouselIndicator(
-              totalCount: _movies.length,
+              totalCount: movies.length,
               currentIndex: _currentIndex,
             ),
           ),
