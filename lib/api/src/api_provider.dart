@@ -1,5 +1,7 @@
 import 'package:http/http.dart' as http;
 
+part 'api_key.dart';
+
 abstract class ApiProvider {
   Future<String> get({
     required String path,
@@ -18,7 +20,7 @@ class ApiProviderImpl implements ApiProvider {
 
   final _host = 'api.themoviedb.org';
   final _apiVersion = 3;
-  final _apiKey = '';
+  final _apiKey = _movieApiKey;
   final _language = 'ko-KR';
 
   @override
