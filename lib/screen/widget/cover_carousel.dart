@@ -106,7 +106,11 @@ class _CarouselTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Detail())),
+        context,
+        MaterialPageRoute(
+          builder: (context) => Detail(id: movie.id),
+        ),
+      ),
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(20.0),

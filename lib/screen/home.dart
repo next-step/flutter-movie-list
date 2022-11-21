@@ -7,7 +7,6 @@ import 'package:flutter_movie_list/repository/repository.dart';
 import 'package:flutter_movie_list/screen/detail.dart';
 
 part 'widget/cover_carousel.dart';
-
 part 'widget/poster_carousel.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -114,8 +113,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  bool _isMovieListBlocChangeErrorState(MovieListState before, MovieListState after) {
+  bool _isMovieListBlocChangeErrorState(
+      MovieListState before, MovieListState after) {
     return (before is MovieListErrorState && after is MovieListLoadedState) ||
-              (before is MovieListLoadedState && after is MovieListErrorState);
+        (before is MovieListLoadedState && after is MovieListErrorState);
   }
 }

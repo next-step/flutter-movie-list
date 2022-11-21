@@ -109,7 +109,11 @@ class _PosterTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Detail())),
+        context,
+        MaterialPageRoute(
+          builder: (context) => Detail(id: movie.id),
+        ),
+      ),
       child: SizedBox(
         width: 150,
         child: Column(
