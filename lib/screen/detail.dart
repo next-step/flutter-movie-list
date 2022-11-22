@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_movie_list/api/src/api_provider.dart';
 import 'package:flutter_movie_list/bloc/movie_detail_bloc.dart';
 
 import '../repository/src/movie_repository.dart';
@@ -18,9 +17,7 @@ class Detail extends StatelessWidget {
     return BlocProvider(
       create: (context) {
         return MovieDetailBloc(
-          repository: MovieRepository(
-            apiProvider: ApiProviderImpl(),
-          ),
+            repository: context.read<MovieRepository>(),
         )..add(MovieDetailEvent(id));
       },
       child: Scaffold(
