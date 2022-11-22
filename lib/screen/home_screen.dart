@@ -4,6 +4,7 @@ import 'package:flutter_movie_list/bloc/movie_list_bloc.dart';
 import 'package:flutter_movie_list/model/model.dart';
 import 'package:flutter_movie_list/repository/repository.dart';
 import 'package:flutter_movie_list/screen/detail_screen.dart';
+import 'package:flutter_movie_list/screen/search_screen.dart';
 
 part 'widget/home/cover_carousel.dart';
 part 'widget/home/poster_carousel.dart';
@@ -96,7 +97,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.search),
-                  onPressed: () {},
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SearchScreen(),
+                    ),
+                  ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.person_outline),
