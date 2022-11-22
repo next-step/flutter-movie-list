@@ -1,7 +1,6 @@
 part of '../home.dart';
 
 class _CoverCarouselWidget extends StatelessWidget {
-
   const _CoverCarouselWidget({
     Key? key,
   }) : super(key: key);
@@ -28,7 +27,8 @@ class _CoverCarouselWidget extends StatelessWidget {
                         );
                       },
                       onPageChanged: (index) {
-                        BlocProvider.of<_IndexCubit>(context).changeIndex(index);
+                        BlocProvider.of<_IndexCubit>(context)
+                            .changeIndex(index);
                       });
                 }
                 return const SizedBox();
@@ -104,29 +104,37 @@ class _CarouselTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.all(20.0),
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: NetworkImage(
-              'https://image.tmdb.org/t/p/original/${movie.backdropPath}'),
-          fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Detail(id: movie.id),
         ),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            movie.title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.all(20.0),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(
+                'https://image.tmdb.org/t/p/original/${movie.backdropPath}'),
+            fit: BoxFit.cover,
           ),
-        ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              movie.title,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
