@@ -1,4 +1,4 @@
-part of '../home.dart';
+part of '../../home_screen.dart';
 
 enum PosterType {
   popular,
@@ -111,7 +111,7 @@ class _PosterTile extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Detail(id: movie.id),
+          builder: (context) => DetailScreen(id: movie.id),
         ),
       ),
       child: SizedBox(

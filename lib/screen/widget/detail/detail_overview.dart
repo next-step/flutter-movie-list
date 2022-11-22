@@ -1,4 +1,4 @@
-part of '../detail.dart';
+part of '../../detail_screen.dart';
 
 class _DetailOverview extends StatelessWidget {
   const _DetailOverview({Key? key}) : super(key: key);

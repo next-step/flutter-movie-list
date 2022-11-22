@@ -1,4 +1,4 @@
-part of '../detail.dart';
+part of '../../detail_screen.dart';
 
 class _DetailStartAndReleaseDate extends StatelessWidget {
   const _DetailStartAndReleaseDate({Key? key}) : super(key: key);

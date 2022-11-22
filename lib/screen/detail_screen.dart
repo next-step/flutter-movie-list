@@ -4,14 +4,14 @@ import 'package:flutter_movie_list/bloc/movie_detail_bloc.dart';
 
 import '../repository/src/movie_repository.dart';
 
-part 'widget/detail_title.dart';
-part 'widget/detail_overview.dart';
-part 'widget/detail_start_and_release_date.dart';
+part 'widget/detail/detail_title.dart';
+part 'widget/detail/detail_overview.dart';
+part 'widget/detail/detail_start_and_release_date.dart';
 
-class Detail extends StatelessWidget {
+class DetailScreen extends StatelessWidget {
   final int id;
 
-  const Detail({
+  const DetailScreen({
     Key? key,
     required this.id,
   }) : super(key: key);
