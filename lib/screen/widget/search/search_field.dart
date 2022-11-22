@@ -9,9 +9,8 @@ class _SearchField extends StatelessWidget {
     var searchBloc = context.read<MovieSearchBloc>();
     return TextField(
       controller: searchController,
-      onChanged: (value) {
-        searchBloc.add(MovieSearchEvent(value));
-      },
+      onChanged: (value) => searchBloc.add(MovieSearchEvent(value)),
+      onSubmitted: (value) => searchBloc.add(MovieSearchEvent(value)),
       decoration: InputDecoration(
         border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(
