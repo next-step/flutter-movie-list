@@ -31,8 +31,6 @@ class _PosterCarouselWidget extends StatefulWidget {
 }
 
 class _PosterCarouselWidgetState extends State<_PosterCarouselWidget> {
-  final MovieRepository _repository = MovieRepository(apiProvider: ApiProviderImpl());
-  List<Movie> _movies = [];
 
   @override
   void initState() {
@@ -42,26 +40,23 @@ class _PosterCarouselWidgetState extends State<_PosterCarouselWidget> {
   }
 
   void _loadMovies() async {
-    late List<Movie> movies;
-
-    if (widget.type == PosterType.popular) {
-      final result = await _repository.getPopular();
-      movies = result.results;
-    } else if (widget.type == PosterType.upcoming) {
-      final result = await _repository.getUpcoming();
-      movies = result.results;
-    } else {
-      //do nothing
-      movies = [];
+    switch (widget.type) {
+      case PosterType.popular:
+        context.read<MoviesBloc>().add(PopularMoviesFetchEvent());
+        break;
+      case PosterType.upcoming:
+        context.read<MoviesBloc>().add(UpcomingMoviesFetchEvent());
+        break;
+      default:
+        break;
     }
-
-    setState(() {
-      _movies = movies;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    MovieList movieList = context.read<MoviesBloc>().state;
+    List<Movie> movies = movieList.results;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -85,19 +80,19 @@ class _PosterCarouselWidgetState extends State<_PosterCarouselWidget> {
           ),
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: _movies.length,
+            itemCount: movies.length,
             itemBuilder: (context, index) {
               if (index == 0) {
                 return Padding(
                   padding: const EdgeInsets.only(left: 20.0),
                   child: _PosterTile(
-                    movie: _movies[index],
+                    movie: movies[index],
                   ),
                 );
               }
 
               return _PosterTile(
-                movie: _movies[index],
+                movie: movies[index],
               );
             },
             separatorBuilder: (context, index) {

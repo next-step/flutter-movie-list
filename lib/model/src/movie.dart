@@ -23,6 +23,8 @@ class MovieList {
   final int totalResults;
 
   factory MovieList.fromJson(Map<String, dynamic> json) => _$MovieListFromJson(json);
+
+  static final MovieList empty = MovieList();
 }
 
 @JsonSerializable()
