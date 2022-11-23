@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter_movie_list/api/api_provider.dart';
-import 'package:flutter_movie_list/model/model.dart' show MovieDetail, MovieList;
+import 'package:flutter_movie_list/model/model.dart'
+    show MovieDetail, MovieList;
+import 'package:flutter_movie_list/model/src/search_results.dart';
 
 class MovieRepository {
   MovieRepository({
@@ -49,11 +51,23 @@ class MovieRepository {
     );
     return MovieDetail.fromJson(jsonDecode(response));
   }
+
+  Future<SearchResults> search(String query) async {
+    final response = await _apiProvider.get(
+      path: 'search/movie',
+      parameters: {
+        'query': query,
+      },
+    );
+    return SearchResults.fromJson(jsonDecode(response));
+  }
 }
 
 class ApiLoadingError extends Error {
   final String message;
+
   ApiLoadingError(this.message);
+
   @override
   String toString() => "ApiLoadingError message: $message";
 }

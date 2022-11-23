@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_movie_list/screen/home.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_movie_list/api/api_provider.dart';
+import 'package:flutter_movie_list/repository/repository.dart';
+import 'package:flutter_movie_list/screen/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,13 +16,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+    return RepositoryProvider<MovieRepository>(
+      create: (_) => MovieRepository(apiProvider: ApiProviderImpl()),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: const HomeScreen(),
       ),
-      home: const MyHomePage(),
     );
   }
 }

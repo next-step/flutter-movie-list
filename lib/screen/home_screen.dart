@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_movie_list/api/api_provider.dart';
 import 'package:flutter_movie_list/bloc/movie_list_bloc.dart';
 import 'package:flutter_movie_list/model/model.dart';
 import 'package:flutter_movie_list/repository/repository.dart';
-import 'package:flutter_movie_list/screen/detail.dart';
+import 'package:flutter_movie_list/screen/detail_screen.dart';
+import 'package:flutter_movie_list/screen/search_screen.dart';
 
-part 'widget/cover_carousel.dart';
-part 'widget/poster_carousel.dart';
+part 'widget/home/cover_carousel.dart';
+part 'widget/home/poster_carousel.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => MovieListBloc(
-        repository: MovieRepository(
-          apiProvider: ApiProviderImpl(),
-        ),
+        repository: context.read<MovieRepository>(),
       ),
       child: Scaffold(
         backgroundColor: Colors.black,
@@ -99,7 +97,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.search),
-                  onPressed: () {},
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SearchScreen(),
+                    ),
+                  ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.person_outline),

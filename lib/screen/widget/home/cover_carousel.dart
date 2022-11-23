@@ -1,4 +1,4 @@
-part of '../home.dart';
+part of '../../home_screen.dart';
 
 class _CoverCarouselWidget extends StatelessWidget {
   const _CoverCarouselWidget({
@@ -108,7 +108,7 @@ class _CarouselTile extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Detail(id: movie.id),
+          builder: (context) => DetailScreen(id: movie.id),
         ),
       ),
       child: Container(
